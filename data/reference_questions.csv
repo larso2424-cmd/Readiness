@@ -1,0 +1,332 @@
+topic,subtopic,calc_type,marks,question_text,answer,difficulty,source_notes
+Functions,Properties of Functions,calc,6,"The function $f$ is deﬁned by $f(x)=\sqrt[3]{2 x+1}$, for $-14 \leq x \leq 13$.
+(a) Write down the range of $f$.
+(b) Find an expression for $f^{-1}$.
+(c) Write down the domain and range of $f^{-1}$.",,,
+Functions,Properties of Functions,calc,6,"A tyre manufacturing company has found that the number of tyres it produces, $N$, can be modelled by the function
+$$N(t)=3 t-9$$
+where $t$ is the number of hours the factory operates per day, with a minimum of 3 hours.
+The proﬁt the company makes, $P$, in dollars, depends on the number of tyres produced, and is modelled by the function
+$$P(N)=60 N-850$$
+where $N$ is the number of tyres produced.
+(a) Find the company's proﬁt or loss if it operates for 6 hours per day.
+(b) Find the company's proﬁt in terms of the hours of operation per day, $t$.
+(c) Determine the number of hours the company needs to operate the factory per day in order to earn a positive proﬁt. Give your answer to the nearest hour.",,,
+Functions,Properties of Functions,calc,6,"Let $f(x)=x^{3}$ and $g(x)=2 x-1$, for $x \in \mathbb{R}$.
+(a) Find $g^{-1}(x)$.
+(b) Find $(g \circ f)(x)$.
+(c) Solve the equation $(g \circ f)(x)=0$.",,,
+Functions,Properties of Functions,no_calc,5,"Let $f(x)=4 x-3$ and $g(x)=2 x$, for $x \in \mathbb{R}$.
+(a) Write down the value of $g(5)$.
+(b) Find $(f \circ g)(x)$.
+(c) Find $(f \circ g)^{-1}(x)$.",,,
+Functions,Properties of Functions,no_calc,6,"Let $f(x)=\sqrt{x-3}$, for $x \geq 3$.
+(a) Find $f^{-1}(x)$.
+Let $g(x)=x^{2}+1$, for $x \in \mathbb{R}$.
+(b) Find $(g \circ f)(28)$.
+(c) Write down the range of:
+(i) $f^{-1}$;
+(ii) $g$.",,,
+Functions,Properties of Functions,no_calc,5,"The functions $f$ and $g$ are deﬁned such that $f(x)=\frac{x-2}{3}$ and $g(x)=12 x+4$.
+(a) Show that $(g \circ f)(x)=4 x-4$.
+(b) Given that $(g \circ f)^{-1}(a)=10$, ﬁnd the value of $a$.",,,
+Functions,Quadratics,calc,7,"Let $f(x)=-6 x^{2}+b x+c$, for $x \in \mathbb{R}$, where $b, c \in \mathbb{Z}$.
+(a) A horizontal line, $L$, intersects the graph of $y=f(x)$ at $(-1, h)$ and $(5, h)$, where $h \in \mathbb{R}$.
+(i) Find the equation of the axis of symmetry of the graph of $y=f(x)$.
+(ii) Hence show that $b=24$.
+(b) Given $h=-8$, ﬁnd the value of $c$.",,,
+Functions,Quadratics,calc,5,Find the equations of the two tangents to the curve $y=2 x^{2}-x+\frac{9}{2}$ that pass through the origin.,,,
+Functions,Quadratics,no_calc,5,"Let $f(x)=a(x-h)^{2}+k$, for $x \in \mathbb{R}$.
+The vertex of the graph of $f$ is at $\mathrm{P}(3,4)$ and the graph passes through $\mathrm{Q}(1,-4)$.
+(a) Write down the values of $h$ and $k$.
+(b) Find the value of $a$.",,,
+Functions,Quadratics,no_calc,5,"The equation $x^{2}+k x+4=0$ has two equal roots.
+Find the possible values of $k$.",,,
+Functions,Quadratics,no_calc,5,"(a) Express $2 x^{2}-8 x+9$ in the form $a(x+b)^{2}+c$ where $a, b, c \in \mathbb{Z}$.
+(b) Given that $f(x)=x-2$ and $(g \circ f)(x)=2 x^{2}-8 x+9$, ﬁnd $g(x)$.",,,
+Functions,Quadratics,no_calc,6,"Let $f(x)=x^{2}-2 x-8$, for $x \in \mathbb{R}$.
+(a) Write down the $y$-intercept of the graph of $y=f(x)$.
+(b) Solve the equation $f(x)=0$.
+(c) Find the equation of the axis of symmetry of the graph of $y=f(x)$.",,,
+Functions,Rational Functions,calc,4,"Consider the function $f(x)=\frac{3 x+4}{2 x+k}$.
+(a) Write down the domain of $f$ in terms of $k$.
+(b) Find $f^{-1}(x)$ in terms of $k$.
+(c) Hence write down the value of $k$ such that $f(x)$ is a self-inverse function.",,,
+Functions,Rational Functions,no_calc,5,"Consider the function $f(x)=b+\frac{4}{x+a},$ where $a, b \in \mathbb{Z}$.
+The equation of the vertical asymptote of $f(x)$ is $x=2$ and $f\left(\frac{2}{3}\right)=0$.
+(a) Write down the value of $a$.
+(b) Hence, ﬁnd the value of $b$.
+(c) Hence, write down the equation of the horizontal asymptote.",,,
+Functions,Rational Functions,no_calc,6,"Let $f(x)=\frac{2}{x-a}+b$, for $x \neq a$.
+The line $x=1$ is a vertical asymptote of the graph of $y=f(x)$.
+(a) Write down the value of $a$.
+The graph of $y=f(x)$ passes through the point $\mathrm{P}(0,3)$.
+(b) Find the value of $b$.
+(c) Find $\lim _{x \rightarrow \infty} f(x)$.",,,
+Functions,Exponent and Log Functions,calc,6,"A population of 50 hamsters was introduced to a new town. One month later, the number of hamsters was 62. The number of hamsters, $P$, can be modelled by the function
+$$P(t)=50 \times b^{t}, t \geq 0$$
+where $t$ is the time, in months, since the hamsters were introduced to the town.
+(a) Find the value of $b$.
+(b) Calculate the number of hamsters in the town after 6 months.
+A wildlife specialist estimates that the town has enough water and food to support a maximum population of 2000 hamsters.
+(c) Calculate the number of months it takes for the hamster population to reach this maximum.",,,
+Functions,Exponent and Log Functions,calc,6,"The number of French words, $N$, that are remembered by students after the completion of a French language course decreases exponentially over time. This data can be modelled by the function
+$$N(t)=a \times b^{-t}+450$$
+where $a$ and $b$ are positive constants, and $t$ is the time in years since a student completed the French language course.
+Immediately after completion, a student remembers 4200 French words.
+(a) Find the value of $a$.
+After 4 years a student remembers only 1600 French words.
+(b) Find the value of $b$.
+The number of French words a student remembers never decreases below a certain number of words, $n$.
+(c) Write down the value of $n$.",,,
+Functions,Exponent and Log Functions,no_calc,5,"(a) Show that $12 \log _{x} 2=\frac{12}{\log _{2} x}$.
+(b) Hence solve the equation $\log _{2} x=8-12 \log _{x} 2$.",,,
+Functions,Exponent and Log Functions,no_calc,5,Solve the equation $\log _{5} x-\log _{5} 4=2+\log _{5} 3$ for $x$.,,,
+Functions,Exponent and Log Functions,no_calc,5,Find the value(s) of $x$ when $27^{x+2}=\left(\frac{1}{9}\right)^{2 x+4}$.,,,
+Functions,Exponent and Log Functions,no_calc,4,"It is given that $\log _{k}\left(\frac{1}{4}\right)=\frac{1}{5}$, where $k>0$. Find the value of
+(a) $\log _{k} 16$;
+(b) $\log _{k^{2}}\left(\frac{1}{16}\right)$.",,,
+Functions,Transformations,calc,7,"Let $f(t)=3 t^{2}+27$, where $t>0$.
+The graph of a function $g$ is obtained when the graph of $f$ is transformed by a stretch by a scale of $\frac{1}{9}$ parallel to the $y$-axis, followed by a horizontal translation of 4 and a vertical translation of -5
+(a) Find $g(t)$, giving your answer in the form $a(t-b)^{2}+c$.
+A particle moves along a straight line so that its velocity in $\mathrm{m} \mathrm{s}^{-1}$, at time $t$ seconds, is given by $g(t)$.
+(b) Find the distance the particle travels between $t=7$ and $t=10$.",,,
+Functions,Transformations,calc,6,"Let $f(x)=x^{3}$ and $g(x)=5(x-2)^{3}$, for $x \in \mathbb{R}$.
+The graph of $g$ can be obtained from the graph of $f$ using two transformations.
+(a) Give a full geometric description of each of the transformations.
+The graph of $g$ is translated by 4 units in the direction of the positive $x$-axis, and 1 unit in the direction of the negative $y$-axis to give the graph of a function $h$.
+The point $\mathrm{P}(1,1)$ on the graph of $f$ is translated to point Q on the graph of $h$.
+(b) Find the coordinates of Q.",,,
+Functions,Transformations,no_calc,5,"Consider $f(x)=2 \cos \left(x-\frac{\pi}{2}\right)+3$ and $g(x)=4 \cos \left(x+\frac{\pi}{2}\right)+2$.
+The function $f$ is mapped onto $g$ by three transformations.
+(a) Fully describe each of the transformations and the order in which they must be applied.
+A new function is such that $h(x)=g(x)+k$ where $k \in \mathbb{R}$.
+(b) Find the minimum value of $k$ such that $h(x) \geq 0$ for all $x$.",,,
+Functions,Transformations,no_calc,7,"Consider the functions $f(x)=3 \cos (x)+\frac{9}{2}$ and $g(x)=3 \cos \left(x+\frac{\pi}{3}\right)+A$, where $x \in \mathbb{R}$ and $A<\frac{9}{2}$.
+(a) Describe a sequence of two transformations that transforms the graph of $f$ to the graph of $g$.
+The $y$-intercept of the graph $g$ is at the point $\left(0, \frac{9}{2}\right)$
+(b) Find the range of $g$.",,,
+Functions,Transformations,no_calc,6,"Let $f$ and $g$ be functions such that $g(x)=3 f(x-2)+1$, for $x \in \mathbb{R}$.
+The graph of $g$ is obtained from the graph of $f$ after the following transformations: a vertical stretch by a factor of $k$, followed by a horizontal translation of $a$ units, followed by a vertical translation of $b$ units.
+(a) Write down the value of:
+(i) $k$;
+(ii) $a$;
+(iii) $b$.
+Let $h(x)=-2 g(x)$, for $x \in \mathbb{R}$.
+The point $\mathrm{P}(3,4)$ on the graph of $g$ is mapped to point Q on the graph of $h$.
+(b) Find the coordinates of Q.",,,
+Number and Algebra,Binomial Theorem,calc,5,"Consider the expansion of $(x-3)^{8}$.
+(a) Write down the number of terms in this expansion.
+(b) Find the coeﬃcient of the term in $x^{6}$.",,,
+Number and Algebra,Binomial Theorem,calc,6,"Consider the expansion of $\frac{(x+a)^{7}}{b x}$, where $a>0$. The coeﬃcient of the term in $x^{5}$ is 2, and the coeﬃcient of the term in $x^{3}$ is 1690.
+Find the value of $a$ and the value of $b$.",,,
+Number and Algebra,Binomial Theorem,calc,6,"In the expansion of $p x^{2}(5+p x)^{8}$, the coeﬃcient of the term in $x^{6}$ is 3402. Find the value of $p$.",,,
+Number and Algebra,Binomial Theorem,calc,4,Expand $(2 x-3)^{4}$ in descending powers of $x$ and simplify your answer.,,,
+Number and Algebra,Binomial Theorem,no_calc,6,"In the expansion of $(a+b x)^{6}$, the coeﬃcient of the $x^{3}$ term is -2 times the coeﬃcient of the $x^{4}$ term.
+Determine the value of $\frac{a}{b}$.",,,
+Number and Algebra,Binomial Theorem,no_calc,6,"In the expansion $(2 x+1)^{n}$, where $n \in \mathbb{Z}^{+}$, the coeﬃcient of $x^{3}$ is equal to six times the diﬀerence between of the coeﬃcient of $x^{2}$ and the coeﬃcient of $x$.
+Find the value of $n$.",,,
+Number and Algebra,Binomial Theorem,no_calc,4,Expand $(2 x+1)^{4}$ in descending powers of $x$ and simplify your answer.,,,
+Number and Algebra,Exponents and Logs,calc,6,"Given that $\log _{b} 3=10$.
+(a) Find the exact value of $\log _{b} 81$.
+(b) Find the exact value of $\log _{b^{2}} 3$.
+(c) Find the value of $b$, giving your answer correct to 3 signiﬁcant ﬁgures.",,,
+Number and Algebra,Exponents and Logs,calc,6,"Given that $\log _{a} 2=5$.
+(a) Find the exact value of $\log _{a} 32$.
+(b) Find the exact value of $\log _{\sqrt{a}} 2$.
+(c) Find the value of $a$, giving your answer correct to 3 signiﬁcant ﬁgures.",,,
+Number and Algebra,Exponents and Logs,no_calc,6,"Let $\log _{2} a=p, \log _{2} b=q, \log _{2} c=r$. Write down the following expressions in terms of $p, q$ and $r$.
+(a) $\log _{2}\left(\frac{a b}{c}\right)$
+(b) $\log _{2}\left(\frac{a^{2} c}{b^{3}}\right)$
+(c) $\log _{a} b$",,,
+Number and Algebra,Exponents and Logs,no_calc,5,"Consider $a=\log _{63} 64 \times \log _{62} 63 \times \log _{61} 62 \times \cdots \times \log _{2} 3$. Given that $a \in \mathbb{Z}$, ﬁnd the value of $a$.",,,
+Number and Algebra,Exponents and Logs,no_calc,5,Find the value(s) of $x$ when $27^{x+2}=\left(\frac{1}{9}\right)^{2 x+4}$.,,,
+Number and Algebra,Exponents and Logs,no_calc,7,"Find the value of each of the following, giving your answer as an integer.
+(a) $\log _{10} 100$.
+(b) $\log _{10} 50+\log _{10} 2$.
+(c) $\log _{10} 4-\log _{10} 40$.",,,
+Number and Algebra,Sequences,calc,6,"Consider the inﬁnite geometric sequence $4480,-3360,2520,-1890, \ldots$
+(a) Find the common ratio, $r$.
+(b) Find the 20th term.
+(c) Find the exact sum of the inﬁnite sequence.",,,
+Number and Algebra,Sequences,calc,6,"Only one of the following four sequences is arithmetic and only one of them is geometric.
+$$\begin{aligned}
+a_{n} & =1,5,10,15, \ldots & c_{n} & =1.5,3,4.5,6, \ldots \\
+b_{n} & =\frac{1}{2}, \frac{2}{3}, \frac{3}{4}, \frac{4}{5}, \ldots & d_{n} & =2,1, \frac{1}{2}, \frac{1}{4}, \ldots
+\end{aligned}$$
+(a) State which sequence is arithmetic and ﬁnd the common diﬀerence of the sequence.
+(b) State which sequence is geometric and ﬁnd the common ratio of the sequence.
+(c) For the geometric sequence ﬁnd the exact value of the eighth term. Give your answer as a fraction.",,,
+Number and Algebra,Sequences,calc,7,"The ﬁrst three terms of a geometric sequence are $u_{1}=0.8, u_{2}=2.4, u_{3}=7.2$.
+(a) Find the value of the common ratio, $r$.
+(b) Find the value of $S_{8}$.
+(c) Find the least value of $n$ such that $S_{n}>35000$.",,,
+Number and Algebra,Sequences,calc,6,"An arithmetic sequence has $u_{1}=40, u_{2}=32, u_{3}=24$.
+(a) Find the common diﬀerence, $d$.
+(b) Find $u_{8}$.
+(c) Find $S_{8}$.1",,,
+Number and Algebra,Sequences,no_calc,6,"The ﬁrst three terms of a geometric sequence are $u_{1}=32, u_{2}=-16, u_{3}=8$.
+(a) Find the value of the common ratio, $r$.
+(b) Find $u_{6}$.
+(c) Find $S_{\infty}$.",,,
+Number and Algebra,Sequences,no_calc,8,"The ﬁrst three terms of a geometric sequence are $\ln x^{9}, \ln x^{3}, \ln x$, for $x>0$.
+(a) Find the common ratio.
+(b) Hence, solve $\sum_{k=1}^{\infty} 3^{3-k} \ln x=27$.",,,
+Number and Algebra,Proofs,no_calc,6,"(a) Show that $(2 n-1)^{3}+(2 n+1)^{3}=16 n^{3}+12 n$ for $n \in \mathbb{Z}$.
+(b) Hence, or otherwise, prove that the sum of the cubes of any two consecutive odd integers is divisible by four.",,,
+Number and Algebra,Proofs,no_calc,5,"(a) Prove that $\frac{5}{x^{2}}=\frac{5}{x(x-2)}-\frac{10}{x^{2}(x-2)}$.
+(b) Determine the set of numbers $x$ for which the proof in part (a) is valid.",,,
+Number and Algebra,Proofs,no_calc,4,Prove that the sum of three consecutive positive integers is divisible by 3.,,,
+Statistics and Probability,Statistics,calc,1,"The weights of 75 parcels were recorded. The results are summarised in the table below:
+\begin{tabular}{|l|l|l|l|l|}
+\hline Weight $(w$ kg $)$ & $0<w \leq 2$ & $2<w \leq 4$ & $4<w \leq 5$ & $5<w \leq 8$ \\
+\hline Frequency & 10 & 20 & 15 & 30 \\
+\hline
+\end{tabular}
+1. Calculate the frequency density for each class interval.
+2. Estimate the mean weight of the parcels.
+3. Draw a frequency density histogram for this data. Label your axes clearly.Marks not speciﬁed in source",,,
+Statistics and Probability,Statistics,calc,1,"The data set of test scores ranging from 1 to 50 is
+$\{45,43,50,21,45,42,11,34,37,44,26,27,31,18,4,40,7,5\}$.
+1. Draw a histogram for the data using ﬁve equal-width class intervals: $1-10,11-20,21-30, 31-40, 41-50$.
+2. What is the modal class of the histogram?
+3. Calculate the mean of the data set.Marks not speciﬁed in source",,,
+Statistics and Probability,Statistics,no_calc,1,"The scores of 25 students on a short mathematics quiz are summarized in the frequency table below:
+\begin{tabular}{|c|c|c|c|c|c|c|}
+\hline Score (x) & $\mathbf{0}$ & $\mathbf{1}$ & $\mathbf{2}$ & $\mathbf{3}$ & $\mathbf{4}$ & $\mathbf{5}$ \\
+\hline Frequency (f) & 2 & 4 & 7 & 6 & 4 & 2 \\
+\hline
+\end{tabular}
+1. Find the lower quartile $\left(Q_{1}\right)$ of the scores.
+2. Find the upper quartile $\left(Q_{3}\right)$ of the scores.
+3. Calculate the interquartile range (IQR).Marks not speciﬁed in source",,,
+Statistics and Probability,Statistics,no_calc,1,"A student took three quizzes. Her mean score was 7. Her median score was 6. The range of her three scores was 8 marks.
+1. Find the number of marks she scored in each of the three quizzes.
+2. The student took a fourth quiz. The mean of her four scores was 9. Find her score in the fourth quiz. Marks not speciﬁed in source",,,
+Statistics and Probability,Bivariate Statistics,calc,1,"A gym tracks the number of push-ups, $p$, and the heart rate, $h$, in beats per minute, of nine members after a workout.
+The regression line of $h$ on $p$ is $h=2 p+80$. The regression line of $p$ on $h$ is $p=0.4 h-28$.
+1. Estimate the heart rate for a member who does 38 push-ups.
+2. Find the mean number of push-ups, $\bar{p}$.Marks not speciﬁed in source",,,
+Statistics and Probability,Bivariate Statistics,calc,1,"A dataset records study time $x$ (hours) and test score $y$ (points) for eight students:
+\begin{tabular}{c|cccccccc}
+$x$ (hours) & 2 & 4 & 5 & 7 & 9 & 12 & 15 & 18 \\
+\hline$y$ (points) & 30 & 28 & 25 & 21 & 20 & 17 & 14 & 12
+\end{tabular}
+1. Using technology, ﬁnd $r$, the regression line $y=a x+b$, and the regression line $x=c y+d$.
+2. Predict $y$ at $x=10$ and ﬁnd the residual for $(7,21)$.
+3. Using $x$ on $y$, estimate $x$ for $y=16$; then invert $y=a x+b$ to estimate $x$ when $y=16$. Explain the diﬀerence.
+4. Compute $r^{2}$ and interpret; comment on extrapolating to $x=25$.Marks not speciﬁed in source",,,
+Statistics and Probability,Probability,calc,1,"A travel agency organizes trips to three destinations: Paris (P), Tokyo (T), and New York (N). A survey of 150 clients shows:
+- 80 visited Paris, 70 visited Tokyo, 60 visited New York.
+- 40 visited both Paris and Tokyo, 30 visited both Paris and New York, 20 visited both Tokyo and New York.
+- 10 visited all three.
+In a raﬄe, a client receives 100 per destination visited; if they visited none, they pay a 50 fee. Let $W$ be the prize amount.
+1. Draw a Venn diagram for the destinations visited.
+2. Show that the number of clients who visited none of the destinations is 20.
+3. Construct the probability distribution table for $W$.
+4. Calculate the expected value of $W$.Marks not speciﬁed in source",,,
+Statistics and Probability,Probability,calc,1,"In a factory, $8 \%$ of products are defective. Two products are selected independently at random.
+1. Write down the probability that a product is not defective.
+2. Find the probability that both products are not defective.
+3. Find the probability that exactly one of the two products is defective.
+4. Determine whether the events ""ﬁrst product is defective"" and ""second product is defective"" are independent.Marks not speciﬁed in source",,,
+Statistics and Probability,Probability,calc,1,"A student is playing with cards of 4 colors: Blue, Green, Orange and Red. Let $B, G, O$ and $R$ be the events of getting a Blue, Green, Orange and Red card respectively. There are 7 blue cards in the deck, twice as many green cards as blue cards, three times as many orange cards as blue cards, and the same number of red cards as blue cards. There are 15 cards that have other colors.
+1. Find $P(O)$.
+2. Calculate the probability of pulling a blue card or an orange card.
+3. The student asks 20 friends to each pick a card at random, note the color, and replace it in the deck. Find the probability that at least 5 of them selected a blue or orange car.
+4. Find the expected number of friends selecting a blue or an orange card.Marks not speciﬁed in source",,,
+Statistics and Probability,Probability,calc,1,"In a school, there are 15 students in a math club.
+1. Find the number of ways to select 5 students for a competition.
+2. Find the number of ways to select 10 students for a project.
+3. Find the number of ways to divide the 15 students into three groups of 5 students each, where the order of groups does not matter.Marks not speciﬁed in source",,,
+Statistics and Probability,Probability,calc,1,"A continuous random variable $X$ has probability density function
+$$f(x)= \begin{cases}k x e^{-x / 3}, & x \geq 0 \\ 0, & x<0\end{cases}$$
+1. Determine the value of the constant $k$.
+2. Find $E(X)$ and $\operatorname{Var}(X)$.
+3. Show that the mode of $X$ is 3. Then, by solving $\int_{0}^{m} f(x) d x=\frac{1}{2}$, ﬁnd the median $m$ correct to three signiﬁcant ﬁgures (calculator required).
+4. Let $Y=2 X+5$. Find $E(Y)$ and $\operatorname{Var}(Y)$.
+5. Compute $P(10 \leq Y \leq 20)$.Marks not speciﬁed in source",,,
+Statistics and Probability,Probability,calc,1,"A bag contains 8 marbles: 3 red, 3 blue, and 2 green. A game involves drawing marbles without replacement until either two marbles of the same color are drawn consecutively or all marbles are drawn. Let $Y$ be the number of draws when the game ends.
+1. Find the probability that the ﬁrst two draws yield marbles of the same color.
+2. Find the probability that the game ends on the third draw due to drawing two consecutive marbles of the same color.
+3. Construct the probability distribution of $Y$ for $Y=2,3,4$, given that the game ends on or before the fourth draw due to drawing two consecutive marbles of the same color.
+4. Calculate the expected value of $Y$ given this distribution.Marks not speciﬁed in source",,,
+Statistics and Probability,Probability,no_calc,1,"A bag contains 12 cards labeled with the numbers 1 to 12. Three cards are drawn randomly without replacement.
+1. Find the probability that the ﬁrst card drawn is even-numbered.
+2. Find the probability that the second card drawn is odd-numbered given that the ﬁrst card was even-numbered.
+3. Find the probability that all three cards drawn are even-numbered.Marks not speciﬁed in source",,,
+Statistics and Probability,Probability,no_calc,1,"A game involves rolling two fair six-sided dice. Let $A$ be the event that the sum of the dice is 7, and let $B$ be the event that at least one die shows a 4.
+1. List the outcomes for event $A$.
+2. Find the probability of event $B$.
+3. Find the probability of $A \cap B$.
+4. Determine whether events $A$ and $B$ are mutually exclusive.Marks not speciﬁed in source",,,
+Statistics and Probability,Probability,no_calc,1,"In a survey of 50 employees, 30 use public transport, 20 use a car, and 5 use both to commute to work. Let $T$ represent the event ""uses public transport"" and $C$ represent the event ""uses a car"".
+1. Draw a Venn diagram to represent this information, clearly labeling all regions with the number of employees.
+2. Find the probability that a randomly selected employee uses only one mode of transport. Marks not speciﬁed in source",,,
+Statistics and Probability,Probability,no_calc,1,"In a game show, a contestant chooses one of three doors at random. The probability that a prize is behind door A is $\frac{1}{4}$, behind door B is $\frac{1}{3}$, and behind door C is $\frac{5}{12}$. The host, who knows where the prize is, opens one of the other doors which does not contain the prize. The contestant can then either stay with their choice or switch to the remaining closed door.
+1. Calculate the probability that the contestant wins if they stay with their initial choice.
+2. Determine whether the events $A$: ""the contestant initially chooses door A"" and $W$: ""the contestant wins by switching"" are independent. Marks not speciﬁed in source",,,
+Statistics and Probability,Probability,no_calc,1,"Box $X$ contains 3 white and 2 black balls. Box $Y$ contains $m$ white and 4 black balls, where $m \in \mathbb{N}$. Roll a fair six-sided die. If the result is 1, 2, or 3, two balls are drawn without replacement from Box $X$; otherwise, two balls are drawn without replacement from Box Y . The probability of drawing two white balls from Box Y is $\frac{3}{14}$.
+1. Find the value of $m$.
+2. Calculate the overall probability that two white balls are drawn.
+3. Given that two white balls were drawn, ﬁnd the probability that they were drawn from Box X.Marks not speciﬁed in source",,,
+Statistics and Probability,Probability,no_calc,1,"A box contains 10 marbles: 4 red (R), 3 blue (B), and 3 green (G). Two marbles are drawn randomly without replacement.
+1. Write down the probability that the ﬁrst marble drawn is red.
+2. Find the probability that the second marble drawn is blue, given that the ﬁrst marble drawn was green.
+3. Find the probability that both marbles drawn are of the same color.Marks not speciﬁed in source",,,
+Statistics and Probability,Distributions,calc,1,"A charity raﬄe sells tickets, where each ticket has a $5 \%$ chance of winning. Let $W$ be the random variable representing the number of tickets purchased to obtain two winning tickets.
+1. Show that $P(W=2)=0.0025$ and ﬁnd $P(W=3)$.
+2. Find $E(W)$ and the probability that at most 10 tickets are needed.
+3. If the prize is not claimed, its value in week $k$ is $100 \cdot 2^{k-1}$ dollars. Find the smallest $k$ such that the expected prize value for a ticket purchased in week $k$ exceeds 10 dollars.
+4. Find the mode(s) of the probability distribution.Marks not speciﬁed in source",,,
+Statistics and Probability,Distributions,calc,1,"A tech company tests microchips for defects, with each chip having a $20 \%$ probability of being defective. Let $Z$ be the number of chips tested until 3 defective chips are found.
+1. Show that $P(Z=3)=0.008$ and ﬁnd $P(Z=4)$.
+2. Determine the most likely number(s) of chips tested.
+3. Find the variance of $Z$.Marks not speciﬁed in source",,,
+Statistics and Probability,Distributions,calc,1,"A mobile app has a feature that successfully loads with probability 0.85 each time it is accessed. A user accesses the feature 8 times in a session. Let $Y$ be the number of times the feature successfully loads.
+1. Find the probability that the feature successfully loads exactly 6 times.
+2. Find the probability that the feature successfully loads at least 7 times. Marks not speciﬁed in source",,,
+Statistics and Probability,Distributions,calc,1,"The probability that a learner is left-handed is 0.08. A sample of 150 learners is randomly selected from the college. Let $k$ be the expected number of left-handed learners in this sample.
+1. Find $k$.
+2. Hence, ﬁnd the probability that exactly $k$ learners are left-handed.
+3. Hence, ﬁnd the probability that fewer than $k$ learners are left-handed.Marks not speciﬁed in source",,,
+Statistics and Probability,Distributions,calc,1,"The lengths of ﬁsh caught in a lake are normally distributed with a mean of 45 cm and a standard deviation of 6 cm. A ﬁsh is considered large if its length exceeds 50 cm.
+1. Calculate the probability that a randomly caught ﬁsh is large.
+2. A ﬁsh is selected at random from those that are large. Find the probability that its length is more than 55 cm.
+3. Estimate the interquartile range of the ﬁsh lengths. Marks not speciﬁed in source",,,
+Statistics and Probability,Distributions,calc,1,"Let $H$ be the height, in cm, of a student in a school. The heights are normally distributed with mean $\mu=165$ cm and variance $\sigma^{2}=64 \mathrm{~cm}^{2}$.
+1. Calculate $P(H \leq 157)$.
+2. Find the value of $k$ (in cm) such that $P(165-k<H<165+k)=0.60$. Marks not speciﬁed in source",,,
+Statistics and Probability,Distributions,calc,1,"A store places a coupon in $30 \%$ of its products. Assume that each product purchased independently contains a coupon with probability 0.3.
+Let $T$ be the number of products that must be purchased until 3 coupons have been obtained (including the product that contains the third coupon).
+1. Verify that $P(T=3)=0.027$.
+2. Find $E(T)$.
+3. Determine the minimum number of products that must be purchased so that the probability of getting at least 3 coupons is greater than 0.6.Marks not speciﬁed in source",,,
+Statistics and Probability,Distributions,no_calc,1,"A discrete random variable $X$ represents the number of successful attempts in a sequence of 5 independent trials, each with a success probability of 0.3. The probability distribution of $X$ follows a binomial distribution.
+1. Write down the probability mass function of $X$.
+2. Calculate the expected value $E(X)$.
+3. Find the variance $\operatorname{Var}(X)$.Marks not speciﬁed in source",,,
+Statistics and Probability,Distributions,no_calc,1,"A discrete random variable $Z$ represents the number of defective items found in a quality control process. The probability distribution of $Z$ is given in the following table:
+\begin{tabular}{|c|c|c|c|c|c|}
+\hline$z$ & $\mathbf{0}$ & $\mathbf{1}$ & $\mathbf{2}$ & $\mathbf{3}$ & $\mathbf{4}$ \\
+\hline$P(Z=z)$ & $k$ & 0.2 & 0.1 & 0.008 & $a$ \\
+\hline
+\end{tabular}
+Let $a=P(Z=4)$, where $Z \sim \operatorname{Bin}(5,0.1)$.
+1. Find the values of $k$ and $a$.
+2. Calculate $E(Z)$ and $\operatorname{Var}(Z)$.
+3. Find the probability that at least 2 defective items are found.Marks not speciﬁed in source",,,
+Geometry and Trigonometry,Trigonometric Functions,calc,5,"In a triangle $\mathrm{ABC}, \mathrm{AB}=6 \mathrm{~cm}, \mathrm{BC}=10 \mathrm{~cm}$ and $\mathrm{CBA}=70^{\circ}$.
+(a) Find the area of the triangle.",,,
+Geometry and Trigonometry,Trigonometric Functions,calc,4,"In a triangle $\mathrm{ABC}, \mathrm{AB}=4 \mathrm{~cm}, \mathrm{BC}=10 \mathrm{~cm}$ and $\mathrm{C} \hat{\mathrm{BA}}=105^{\circ}$.
+(a) Find the area of the triangle $A B C$.
+(b) Find AC.",,,
+Geometry and Trigonometry,Trigonometric Functions,calc,5,"ABCD is a quadrilateral where $\mathrm{AB}=9 \mathrm{~cm}, \mathrm{BC}=12 \mathrm{~cm}, \mathrm{CD}=11 \mathrm{~cm}, \mathrm{DA}=8.5 \mathrm{~cm}$ and $\mathrm{ABC}=90^{\circ}$. Find ADC, giving your answer correct to the nearest degree.",,,
+Geometry and Trigonometry,Trigonometric Functions,calc,7,"Given that $\sin x=\frac{3}{5}$, where $x$ is an acute angle, ﬁnd:
+(a) $\cos x$;
+(b) $\sin 2 x$;
+(c) $\cos 2 x$.",,,
+Geometry and Trigonometry,Trigonometric Functions,calc,1,"Let $\sin x=\frac{2}{3}$, where $x$ is obtuse.
+(a) Find $\cos x$.
+(b) Find $\cos 2 x$. Marks not speciﬁed in source",,,
+Geometry and Trigonometry,Trigonometric Functions,calc,6,"Consider a triangle with sides $\mathrm{AB}=10 \mathrm{~mm}$ and $\mathrm{AC}=8 \mathrm{~mm}$. Given that the area of the triangle is $24 \mathrm{~mm}^{2}$, ﬁnd the possible values for the length of $[\mathrm{BC}]$.2",,,
