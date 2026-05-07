@@ -20,10 +20,11 @@ interface Props {
   initialPaperType: string
   initialTargetGrade: number | null
   initialTopics: string[]
+  course: string
 }
 
 export default function ExamEditClient({
-  examId, initialName, initialDate, initialPaperType, initialTargetGrade, initialTopics,
+  examId, initialName, initialDate, initialPaperType, initialTargetGrade, initialTopics, course,
 }: Props) {
   const router = useRouter()
   const [name, setName] = useState(initialName)
@@ -141,17 +142,19 @@ export default function ExamEditClient({
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
-            <div className="space-y-1.5">
-              <label className="text-sm font-medium text-gray-300">Paper type</label>
-              <select value={paperType} onChange={(e) => setPaperType(e.target.value)}
-                className="w-full bg-gray-900 border border-gray-700 rounded-xl px-3 py-3 text-sm text-white focus:outline-none focus:border-blue-500 transition-colors">
-                <option value="both">Both papers</option>
-                <option value="calculator">Calculator</option>
-                <option value="no-calculator">No calculator</option>
-                <option value="mock">Mock style</option>
-              </select>
-            </div>
+          <div className={`grid gap-3 ${course === 'ai' ? 'grid-cols-1' : 'grid-cols-2'}`}>
+            {course !== 'ai' && (
+              <div className="space-y-1.5">
+                <label className="text-sm font-medium text-gray-300">Paper type</label>
+                <select value={paperType} onChange={(e) => setPaperType(e.target.value)}
+                  className="w-full bg-gray-900 border border-gray-700 rounded-xl px-3 py-3 text-sm text-white focus:outline-none focus:border-blue-500 transition-colors">
+                  <option value="both">Both papers</option>
+                  <option value="calculator">Calculator</option>
+                  <option value="no-calculator">No calculator</option>
+                  <option value="mock">Mock style</option>
+                </select>
+              </div>
+            )}
             <div className="space-y-1.5">
               <label className="text-sm font-medium text-gray-300">Target grade</label>
               <select value={targetGrade} onChange={(e) => setTargetGrade(e.target.value)}

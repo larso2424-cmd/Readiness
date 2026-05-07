@@ -19,7 +19,7 @@ export default async function ExamEditPage({ params }: { params: Promise<{ id: s
 
   const { data: exam } = await supabase
     .from('exams')
-    .select('id, name, exam_date, paper_type, target_grade, user_id')
+    .select('id, name, exam_date, paper_type, target_grade, user_id, course')
     .eq('id', id)
     .single()
 
@@ -40,6 +40,7 @@ export default async function ExamEditPage({ params }: { params: Promise<{ id: s
       initialPaperType={exam.paper_type ?? 'both'}
       initialTargetGrade={exam.target_grade}
       initialTopics={topics}
+      course={exam.course ?? 'aa'}
     />
   )
 }
