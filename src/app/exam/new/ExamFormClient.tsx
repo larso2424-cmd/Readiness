@@ -12,8 +12,11 @@ const ALL_TOPICS = [
   { id: 'Calculus', label: 'Calculus' },
 ]
 
+type Course = 'aa' | 'ai'
+
 export default function ExamFormClient({ userId }: { userId: string }) {
   const router = useRouter()
+  const [course, setCourse] = useState<Course | null>(null)
   const [name, setName] = useState('')
   const [date, setDate] = useState('')
   const [paperType, setPaperType] = useState<string>('both')
@@ -35,7 +38,7 @@ export default function ExamFormClient({ userId }: { userId: string }) {
   }
 
   async function save() {
-    if (!name.trim() || topics.size === 0) {
+    if (!name.trim() || topics.size === 0 || !course) {
       setError('Add a name and select at least one topic.')
       return
     }
@@ -51,6 +54,7 @@ export default function ExamFormClient({ userId }: { userId: string }) {
         exam_date: date || null,
         paper_type: paperType,
         target_grade: targetGrade ? parseInt(targetGrade) : null,
+        course,
       })
       .select('id')
       .single()
@@ -75,12 +79,58 @@ export default function ExamFormClient({ userId }: { userId: string }) {
     router.refresh()
   }
 
+  // Step 1: Course selection
+  if (!course) {
+    return (
+      <div className="min-h-screen bg-gray-950 text-white px-4 py-10">
+        <div className="max-w-lg mx-auto space-y-8">
+          <div>
+            <p className="text-gray-400 text-sm">New exam</p>
+            <h1 className="text-2xl font-bold mt-1">Which course?</h1>
+            <p className="text-gray-400 text-sm mt-1">Choose the IB Math course your exam is for.</p>
+          </div>
+          <div className="space-y-3">
+            <button
+              onClick={() => setCourse('aa')}
+              className="w-full flex items-start gap-4 px-5 py-4 rounded-xl border border-gray-800 bg-gray-900 hover:border-blue-500 hover:bg-blue-950 transition-colors text-left group"
+            >
+              <div className="w-10 h-10 rounded-lg bg-blue-600 flex items-center justify-center shrink-0 text-white font-bold text-sm">AA</div>
+              <div>
+                <p className="font-semibold text-white">Math AA SL</p>
+                <p className="text-sm text-gray-400 mt-0.5">Analysis & Approaches — algebra, functions, calculus</p>
+              </div>
+            </button>
+            <button
+              onClick={() => setCourse('ai')}
+              className="w-full flex items-start gap-4 px-5 py-4 rounded-xl border border-gray-800 bg-gray-900 hover:border-purple-500 hover:bg-purple-950 transition-colors text-left group"
+            >
+              <div className="w-10 h-10 rounded-lg bg-purple-600 flex items-center justify-center shrink-0 text-white font-bold text-sm">AI</div>
+              <div>
+                <p className="font-semibold text-white">Math AI SL</p>
+                <p className="text-sm text-gray-400 mt-0.5">Applications & Interpretation — statistics, modelling, finance</p>
+              </div>
+            </button>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  const accentColor = course === 'aa' ? 'blue' : 'purple'
+  const courseLabel = course === 'aa' ? 'Math AA SL' : 'Math AI SL'
+
   return (
     <div className="min-h-screen bg-gray-950 text-white px-4 py-10">
       <div className="max-w-lg mx-auto space-y-8">
 
         <div>
-          <p className="text-gray-400 text-sm">New exam</p>
+          <button onClick={() => setCourse(null)} className="text-sm text-gray-500 hover:text-gray-300 transition-colors">← Change course</button>
+          <div className="flex items-center gap-2 mt-2">
+            <div className={`w-6 h-6 rounded text-xs font-bold flex items-center justify-center ${course === 'aa' ? 'bg-blue-600' : 'bg-purple-600'}`}>
+              {course.toUpperCase()}
+            </div>
+            <span className="text-sm text-gray-400">{courseLabel}</span>
+          </div>
           <h1 className="text-2xl font-bold mt-1">Set up your exam</h1>
           <p className="text-gray-400 text-sm mt-1 leading-relaxed">
             Your readiness score, weak topics, and quizzes will all be scoped to this exam.
@@ -128,11 +178,15 @@ export default function ExamFormClient({ userId }: { userId: string }) {
                     key={topic.id}
                     onClick={() => toggleTopic(topic.id)}
                     className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl border text-left transition-colors ${
-                      isSelected ? 'border-blue-500 bg-blue-950' : 'border-gray-800 bg-gray-900 hover:border-gray-600'
+                      isSelected
+                        ? accentColor === 'blue' ? 'border-blue-500 bg-blue-950' : 'border-purple-500 bg-purple-950'
+                        : 'border-gray-800 bg-gray-900 hover:border-gray-600'
                     }`}
                   >
                     <div className={`w-4 h-4 rounded border-2 shrink-0 flex items-center justify-center transition-colors ${
-                      isSelected ? 'border-blue-500 bg-blue-500' : 'border-gray-600'
+                      isSelected
+                        ? accentColor === 'blue' ? 'border-blue-500 bg-blue-500' : 'border-purple-500 bg-purple-500'
+                        : 'border-gray-600'
                     }`}>
                       {isSelected && (
                         <svg className="w-2.5 h-2.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
@@ -184,7 +238,7 @@ export default function ExamFormClient({ userId }: { userId: string }) {
             disabled={saving || !name.trim() || topics.size === 0}
             className="w-full bg-white text-gray-900 py-3 rounded-xl font-medium hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
           >
-            {saving ? 'Creating...' : 'Create exam & choose topics →'}
+            {saving ? 'Creating...' : 'Create exam →'}
           </button>
         </div>
 

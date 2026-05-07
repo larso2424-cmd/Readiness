@@ -57,7 +57,11 @@ export default async function Home() {
     return (
       <main className="min-h-screen flex flex-col items-center justify-center bg-gray-950 px-4">
         <div className="max-w-md w-full text-center space-y-6">
-          <h1 className="text-4xl font-bold text-white">IB Math AA SL</h1>
+          <h1 className="text-4xl font-bold text-white">IB Math Readiness</h1>
+          <div className="flex gap-2 justify-center">
+            <span className="text-xs font-bold bg-blue-600 text-white px-2 py-1 rounded">AA SL</span>
+            <span className="text-xs font-bold bg-purple-600 text-white px-2 py-1 rounded">AI SL</span>
+          </div>
           <p className="text-gray-400 text-lg">Diagnose your weak topics. Pass your exams.</p>
           <div className="flex gap-3 justify-center">
             <Link href="/auth/signup" className="bg-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 transition-colors">
@@ -75,7 +79,7 @@ export default async function Home() {
   // Fetch user profile + all their exams
   const [{ data: userData }, { data: examsData }] = await Promise.all([
     supabase.from('users').select('active_exam_id').eq('id', user.id).single(),
-    supabase.from('exams').select('id, name, exam_date, target_grade, archived').eq('user_id', user.id).eq('archived', false).order('exam_date', { ascending: true, nullsFirst: false }),
+    supabase.from('exams').select('id, name, exam_date, target_grade, archived, course').eq('user_id', user.id).eq('archived', false).order('exam_date', { ascending: true, nullsFirst: false }),
   ])
 
   const allExams = examsData ?? []

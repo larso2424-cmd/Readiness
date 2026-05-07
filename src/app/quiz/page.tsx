@@ -14,9 +14,18 @@ export default async function QuizPage() {
   const { data: { user } } = await userClient.auth.getUser()
 
   let examTopics: string[] = []
+  let examCourse: string = 'aa'
+
   if (user) {
     const { data: userData } = await supabase.from('users').select('active_exam_id').eq('id', user.id).single()
     if (userData?.active_exam_id) {
+      const { data: examData } = await supabase
+        .from('exams')
+        .select('course')
+        .eq('id', userData.active_exam_id)
+        .single()
+      examCourse = examData?.course ?? 'aa'
+
       const { data: topicsData } = await supabase
         .from('exam_topics')
         .select('topic')
@@ -27,7 +36,7 @@ export default async function QuizPage() {
 
   const { data: subtopics } = await supabase
     .from('subtopics')
-    .select('id, topic, subtopic, display_order')
+    .select('id, topic, subtopic, display_order, course')
     .order('display_order')
 
   const { data: available } = await supabase
@@ -36,15 +45,22 @@ export default async function QuizPage() {
     .eq('status', 'approved')
 
   const availableIds = new Set((available ?? []).map((r: any) => r.subtopic_id))
-  const allFiltered = (subtopics ?? []).filter((s: any) => availableIds.has(s.id))
+
+  // Filter subtopics by course (show course-specific + shared)
+  const courseFiltered = (subtopics ?? []).filter((s: any) => {
+    if (!availableIds.has(s.id)) return false
+    const c = s.course ?? 'aa'
+    return c === examCourse || c === 'both'
+  })
+
   const examFiltered = examTopics.length > 0
-    ? allFiltered.filter((s: any) => examTopics.includes(s.topic))
-    : allFiltered
+    ? courseFiltered.filter((s: any) => examTopics.includes(s.topic))
+    : courseFiltered
 
   return (
     <TopicSelector
       subtopics={examFiltered}
-      allSubtopics={allFiltered}
+      allSubtopics={courseFiltered}
       requireAuth={!user}
       examTopics={examTopics}
     />

@@ -11,6 +11,7 @@ interface Exam {
   exam_date: string | null
   target_grade: number | null
   archived: boolean
+  course?: string
 }
 
 interface Props {
@@ -116,6 +117,11 @@ function ExamSwitcher({ activeExam, allExams, onSwitch, onSignOut, name }: {
         onClick={() => setOpen((v) => !v)}
         className="flex items-center gap-2 bg-gray-800 hover:bg-gray-700 px-3 py-1.5 rounded-full text-sm transition-colors max-w-[180px]"
       >
+        {activeExam.course && (
+          <span className={`text-xs font-bold px-1.5 py-0.5 rounded shrink-0 ${activeExam.course === 'ai' ? 'bg-purple-600' : 'bg-blue-600'} text-white`}>
+            {activeExam.course === 'ai' ? 'AI' : 'AA'}
+          </span>
+        )}
         <span className="truncate font-medium">{activeExam.name}</span>
         <span className="text-gray-400 shrink-0">▾</span>
       </button>
@@ -132,7 +138,14 @@ function ExamSwitcher({ activeExam, allExams, onSwitch, onSignOut, name }: {
                     onClick={() => { setOpen(false); onSwitch(exam.id) }}
                     className="flex-1 text-left px-3 py-2.5"
                   >
-                    <p className="text-sm font-medium text-white">{exam.name}</p>
+                    <div className="flex items-center gap-1.5">
+                      {exam.course && (
+                        <span className={`text-xs font-bold px-1 py-0.5 rounded ${exam.course === 'ai' ? 'bg-purple-600' : 'bg-blue-600'} text-white`}>
+                          {exam.course === 'ai' ? 'AI' : 'AA'}
+                        </span>
+                      )}
+                      <p className="text-sm font-medium text-white">{exam.name}</p>
+                    </div>
                     {exam.exam_date && (
                       <p className="text-xs text-gray-400 mt-0.5">
                         {new Date(exam.exam_date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
