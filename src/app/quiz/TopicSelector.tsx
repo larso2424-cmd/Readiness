@@ -37,10 +37,6 @@ export default function TopicSelector({
   const hasExamFilter = (examTopics?.length ?? 0) > 0
   const displaySubtopics = hasExamFilter && !showAll ? subtopics : allSubtopics
 
-  // All subtopics including locked ones for display
-  const allForDisplay = allSubtopics
-
-  // Group by topic
   const grouped: Record<string, Subtopic[]> = {}
   for (const s of displaySubtopics) {
     if (!grouped[s.topic]) grouped[s.topic] = []
@@ -76,63 +72,73 @@ export default function TopicSelector({
 
   if (allSubtopics.length === 0) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-950 px-4">
-        <div className="text-center">
-          <p className="text-gray-400 font-medium">No questions available yet.</p>
-        </div>
+      <div className="min-h-screen flex items-center justify-center px-4" style={{ background: 'var(--bg)' }}>
+        <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>No questions available yet.</p>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gray-950 text-white px-4 py-8">
+    <div className="min-h-screen px-4 py-8" style={{ background: 'var(--bg)', color: 'var(--text-primary)' }}>
       <div className="max-w-xl mx-auto space-y-6">
 
         {/* Header */}
-        <div className="space-y-3">
-          <Link href="/" className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-300 transition-colors">
+        <div className="space-y-3 fade-up fade-up-1">
+          <Link href="/" className="inline-flex items-center gap-1 text-sm transition-colors" style={{ color: 'var(--text-tertiary)' }}>
             ← Dashboard
           </Link>
           <div className="flex items-start justify-between">
             <div>
-              <h1 className="text-2xl font-bold">Choose your topics</h1>
-              <p className="text-gray-400 mt-1 text-sm">Select the subtopics you want to be tested on.</p>
+              <h1 className="text-xl font-bold" style={{ color: 'var(--text-primary)' }}>Practice quiz</h1>
+              <p className="text-sm mt-0.5" style={{ color: 'var(--text-secondary)' }}>Choose topics to be tested on.</p>
             </div>
             {!pro && (
-              <Link href="/upgrade" className="shrink-0 ml-4 bg-orange-500 hover:bg-orange-600 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition-colors">
-                🔥 Exam Mode
+              <Link href="/upgrade" className="shrink-0 ml-4 text-xs font-semibold px-3 py-1.5 rounded-lg transition-colors" style={{
+                background: 'var(--accent-muted)',
+                color: 'var(--accent)',
+                border: '1px solid rgba(224,122,95,0.3)',
+              }}>
+                Upgrade
               </Link>
             )}
           </div>
         </div>
 
-        {/* Quiz limit warning */}
+        {/* Quiz limit */}
         {quizLimitReached && (
-          <div className="bg-gray-900 border border-orange-500/40 rounded-xl px-4 py-4 space-y-3">
-            <p className="text-sm font-medium text-white">You've used your free quiz for today 🔒</p>
-            <p className="text-xs text-gray-400">Free users get 1 quiz per day. Upgrade to unlock unlimited quizzes.</p>
-            <Link href="/upgrade" className="block w-full text-center bg-orange-500 hover:bg-orange-600 text-white text-sm font-bold py-2.5 rounded-xl transition-colors">
-              🔥 Get Exam Mode — €19.99
+          <div className="rounded-xl px-4 py-4 space-y-3 fade-up fade-up-2" style={{
+            background: 'var(--bg-card)',
+            border: '1px solid rgba(224,122,95,0.3)',
+          }}>
+            <p className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>Daily quiz used</p>
+            <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>Free users get 1 quiz per day. Upgrade for unlimited.</p>
+            <Link href="/upgrade" className="block w-full text-center py-2.5 rounded-xl text-sm font-bold transition-opacity" style={{
+              background: 'var(--accent)',
+              color: '#fff',
+            }}>
+              Get Exam Mode — €19.99
             </Link>
           </div>
         )}
 
         {/* Exam filter toggle */}
         {hasExamFilter && (
-          <div className="flex items-center justify-between bg-gray-900 rounded-xl px-4 py-3">
+          <div className="flex items-center justify-between rounded-xl px-4 py-3 fade-up fade-up-2" style={{
+            background: 'var(--bg-card)',
+            border: '1px solid var(--border)',
+          }}>
             <div>
-              <p className="text-sm font-medium text-white">
-                {showAll ? 'Showing all topics' : 'Showing your exam topics'}
+              <p className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>
+                {showAll ? 'All topics' : 'Your exam topics'}
               </p>
-              <p className="text-xs text-gray-400 mt-0.5">
-                {showAll
-                  ? 'Switch back to see only your exam topics'
-                  : `${subtopics.length} subtopics from your exam setup`}
+              <p className="text-xs mt-0.5" style={{ color: 'var(--text-secondary)' }}>
+                {showAll ? 'Showing everything' : `${subtopics.length} subtopics`}
               </p>
             </div>
             <button
               onClick={() => { setShowAll((v) => !v); setSelected(new Set()) }}
-              className="text-xs text-blue-400 hover:text-blue-300 transition-colors shrink-0 ml-4"
+              className="text-xs transition-colors shrink-0 ml-4"
+              style={{ color: 'var(--accent)' }}
             >
               {showAll ? 'Show exam only' : 'Show all'}
             </button>
@@ -140,59 +146,78 @@ export default function TopicSelector({
         )}
 
         {/* Topic groups */}
-        <div className="space-y-6">
+        <div className="space-y-6 fade-up fade-up-3">
           {Object.entries(grouped).map(([topic, subs]) => (
             <div key={topic}>
-              <div className="flex items-center justify-between mb-2">
-                <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wider">{topic}</h2>
+              <div className="flex items-center justify-between mb-2.5">
+                <h2 className="text-xs font-semibold uppercase tracking-wider" style={{ color: 'var(--text-tertiary)' }}>{topic}</h2>
                 {!isLocked(subs[0]) && (
                   <button
                     onClick={() => {
-                      const allSelected = subs.filter(s => !isLocked(s)).every((s) => selected.has(s.id))
+                      const allSel = subs.filter(s => !isLocked(s)).every((s) => selected.has(s.id))
                       setSelected((prev) => {
                         const next = new Set(prev)
-                        subs.filter(s => !isLocked(s)).forEach((s) => allSelected ? next.delete(s.id) : next.add(s.id))
+                        subs.filter(s => !isLocked(s)).forEach((s) => allSel ? next.delete(s.id) : next.add(s.id))
                         return next
                       })
                     }}
-                    className="text-xs text-gray-500 hover:text-gray-300 transition-colors"
+                    className="text-xs transition-colors"
+                    style={{ color: 'var(--text-tertiary)' }}
                   >
                     {subs.filter(s => !isLocked(s)).every((s) => selected.has(s.id)) ? 'Deselect all' : 'Select all'}
                   </button>
                 )}
               </div>
-              <div className="space-y-2">
+              <div className="space-y-1.5">
                 {subs.map((s) => {
                   const locked = isLocked(s)
+                  const sel = selected.has(s.id)
                   return locked ? (
                     <Link
                       key={s.id}
                       href="/upgrade"
-                      className="flex items-center gap-3 p-3 rounded-xl border border-gray-800 bg-gray-900/50 opacity-60 hover:opacity-80 transition-opacity"
+                      className="flex items-center gap-3 px-4 py-3 rounded-xl transition-opacity opacity-50 hover:opacity-70"
+                      style={{
+                        background: 'var(--bg-card)',
+                        border: '1px solid var(--border-subtle)',
+                      }}
                     >
-                      <div className="w-4 h-4 rounded border-2 border-gray-700 shrink-0 flex items-center justify-center">
-                        <span className="text-[10px]">🔒</span>
+                      <div className="w-4 h-4 rounded shrink-0 flex items-center justify-center" style={{
+                        border: '1.5px solid var(--text-tertiary)',
+                      }}>
+                        <svg className="w-2.5 h-2.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} style={{ color: 'var(--text-tertiary)' }}>
+                          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                          <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                        </svg>
                       </div>
-                      <span className="text-gray-400 text-sm font-medium flex-1">{s.subtopic}</span>
-                      <span className="text-xs bg-orange-500/20 text-orange-400 font-bold px-2 py-0.5 rounded-full">PRO</span>
+                      <span className="text-sm font-medium flex-1" style={{ color: 'var(--text-tertiary)' }}>{s.subtopic}</span>
+                      <span className="text-xs font-bold px-2 py-0.5 rounded-full" style={{
+                        background: 'var(--accent-muted)',
+                        color: 'var(--accent)',
+                      }}>PRO</span>
                     </Link>
                   ) : (
-                    <label
+                    <button
                       key={s.id}
-                      className={`flex items-center gap-3 p-3 rounded-xl border cursor-pointer transition-colors ${
-                        selected.has(s.id)
-                          ? 'border-blue-500 bg-blue-950'
-                          : 'border-gray-800 bg-gray-900 hover:border-gray-600'
-                      }`}
+                      onClick={() => toggle(s.id, false)}
+                      className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left transition-colors"
+                      style={{
+                        background: sel ? 'rgba(224,122,95,0.08)' : 'var(--bg-card)',
+                        border: sel ? '1px solid rgba(224,122,95,0.4)' : '1px solid var(--border)',
+                      }}
                     >
-                      <input
-                        type="checkbox"
-                        checked={selected.has(s.id)}
-                        onChange={() => toggle(s.id, false)}
-                        className="rounded text-blue-600"
-                      />
-                      <span className="text-gray-200 text-sm font-medium">{s.subtopic}</span>
-                    </label>
+                      <div className="w-4 h-4 rounded shrink-0 flex items-center justify-center transition-colors" style={{
+                        background: sel ? 'var(--accent)' : 'transparent',
+                        border: sel ? '1.5px solid var(--accent)' : '1.5px solid var(--text-tertiary)',
+                      }}>
+                        {sel && (
+                          <svg className="w-2.5 h-2.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                          </svg>
+                        )}
+                      </div>
+                      <span className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>{s.subtopic}</span>
+                    </button>
                   )
                 })}
               </div>
@@ -201,18 +226,20 @@ export default function TopicSelector({
         </div>
 
         {/* Actions */}
-        <div className="space-y-2 pb-4">
+        <div className="space-y-2 pb-6 fade-up fade-up-4">
           <button
             onClick={startQuiz}
             disabled={selected.size === 0 || quizLimitReached}
-            className="w-full bg-white text-gray-900 py-3 rounded-xl font-medium hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+            className="w-full py-3.5 rounded-xl font-semibold text-sm transition-opacity disabled:opacity-30 disabled:cursor-not-allowed"
+            style={{ background: 'var(--text-primary)', color: 'var(--bg)' }}
           >
-            Start quiz — {selected.size} {selected.size === 1 ? 'topic' : 'topics'} selected
+            Start quiz · {selected.size} {selected.size === 1 ? 'topic' : 'topics'} selected
           </button>
           {selected.size === 0 && !quizLimitReached && (
             <button
               onClick={selectAll}
-              className="w-full text-gray-500 hover:text-gray-300 py-2 text-sm transition-colors"
+              className="w-full py-2 text-sm transition-colors"
+              style={{ color: 'var(--text-tertiary)' }}
             >
               Select all {displaySubtopics.filter(s => !isLocked(s)).length} topics
             </button>
