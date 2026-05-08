@@ -62,7 +62,7 @@ export default function UpgradePage() {
             </div>
             <div>
               <p className="text-xs text-orange-400 uppercase tracking-wide font-medium">🔥 Exam Mode</p>
-              <p className="text-3xl font-bold mt-1">€24.99</p>
+              <p className="text-3xl font-bold mt-1">€19.99</p>
               <p className="text-xs text-orange-400 mt-1 font-medium">Expires after exam season</p>
             </div>
             <ul className="space-y-2 text-sm text-gray-300">

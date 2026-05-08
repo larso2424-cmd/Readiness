@@ -112,7 +112,7 @@ export default function TopicSelector({
             <p className="text-sm font-medium text-white">You've used your free quiz for today 🔒</p>
             <p className="text-xs text-gray-400">Free users get 1 quiz per day. Upgrade to unlock unlimited quizzes.</p>
             <Link href="/upgrade" className="block w-full text-center bg-orange-500 hover:bg-orange-600 text-white text-sm font-bold py-2.5 rounded-xl transition-colors">
-              🔥 Get Exam Mode — €24.99
+              🔥 Get Exam Mode — €19.99
             </Link>
           </div>
         )}
