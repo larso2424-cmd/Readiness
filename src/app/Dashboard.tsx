@@ -128,8 +128,8 @@ function ExamSwitcher({ activeExam, allExams, onSwitch, onSignOut, name }: {
 
       {open && (
         <>
-          <div className="fixed inset-0 z-10" onClick={() => setOpen(false)} />
-          <div className="absolute right-0 mt-1.5 w-60 bg-[#161d2e] border border-[var(--border)] rounded-xl shadow-2xl z-20 overflow-hidden">
+          <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />
+          <div className="absolute right-0 mt-1.5 w-60 bg-[#161d2e] border border-[var(--border)] rounded-xl shadow-2xl z-50 overflow-hidden">
             <div className="p-1.5">
               <p className="text-[11px] text-[var(--text-tertiary)] font-medium px-2.5 py-2 uppercase tracking-wider">Your exams</p>
               {allExams.map((exam) => (
@@ -206,7 +206,7 @@ export default function Dashboard({
       <div className="max-w-xl mx-auto px-5 py-7 space-y-5">
 
         {/* Header */}
-        <div className="flex items-center justify-between fade-up fade-up-1">
+        <div className="flex items-center justify-between fade-up fade-up-1 relative z-10">
           <div>
             <p className="text-xs text-[var(--text-tertiary)] font-medium tracking-wide uppercase">{date}</p>
             <h1 className="text-xl font-semibold text-[var(--text-primary)] mt-0.5">{greeting}, {name}</h1>
