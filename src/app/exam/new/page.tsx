@@ -51,5 +51,11 @@ export default async function NewExamPage() {
     }
   }
 
-  return <ExamFormClient userId={user.id} pro={pro} />
+  const { count: examCount } = await supabase
+    .from('exams')
+    .select('id', { count: 'exact', head: true })
+    .eq('user_id', user.id)
+    .eq('archived', false)
+
+  return <ExamFormClient userId={user.id} pro={pro} hasExistingExam={(examCount ?? 0) > 0} />
 }

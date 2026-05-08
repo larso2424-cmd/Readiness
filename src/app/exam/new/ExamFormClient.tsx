@@ -16,7 +16,7 @@ const FREE_TOPICS = ['Number and Algebra', 'Functions']
 
 type Course = 'aa' | 'ai'
 
-export default function ExamFormClient({ userId, pro = false }: { userId: string; pro?: boolean }) {
+export default function ExamFormClient({ userId, pro = false, hasExistingExam = false }: { userId: string; pro?: boolean; hasExistingExam?: boolean }) {
   const router = useRouter()
   const [course, setCourse] = useState<Course | null>(null)
   const [name, setName] = useState('')
@@ -88,7 +88,9 @@ export default function ExamFormClient({ userId, pro = false }: { userId: string
       <div className="min-h-screen bg-gray-950 text-white px-4 py-10">
         <div className="max-w-lg mx-auto space-y-8">
           <div>
-            <a href="/" className="text-sm text-gray-500 hover:text-gray-300 transition-colors">← Dashboard</a>
+            {hasExistingExam && (
+              <a href="/" className="text-sm text-gray-500 hover:text-gray-300 transition-colors">← Dashboard</a>
+            )}
             <p className="text-gray-400 text-sm mt-4">New exam</p>
             <h1 className="text-2xl font-bold mt-1">Which course?</h1>
             <p className="text-gray-400 text-sm mt-1">Choose the IB Math course your exam is for.</p>
