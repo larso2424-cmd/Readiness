@@ -36,7 +36,7 @@ function LoginForm() {
 
         <div className="text-center space-y-1">
           <h1 className="text-xl font-bold" style={{ color: 'var(--text-primary)' }}>Welcome back</h1>
-          <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>IB Math Readiness</p>
+          <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>StudyReady</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-3">

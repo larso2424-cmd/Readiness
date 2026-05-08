@@ -56,19 +56,21 @@ export default async function Home() {
 
   if (!user) {
     return (
-      <main className="min-h-screen flex flex-col items-center justify-center bg-gray-950 px-4">
-        <div className="max-w-md w-full text-center space-y-6">
-          <h1 className="text-4xl font-bold text-white">IB Math Readiness</h1>
-          <div className="flex gap-2 justify-center">
-            <span className="text-xs font-bold bg-blue-600 text-white px-2 py-1 rounded">AA SL</span>
-            <span className="text-xs font-bold bg-purple-600 text-white px-2 py-1 rounded">AI SL</span>
+      <main className="min-h-screen flex flex-col items-center justify-center px-4" style={{ background: 'var(--bg)' }}>
+        <div className="max-w-sm w-full text-center space-y-6 fade-up fade-up-1">
+          <div className="space-y-2">
+            <h1 className="text-3xl font-bold" style={{ color: 'var(--text-primary)' }}>StudyReady</h1>
+            <div className="flex gap-2 justify-center">
+              <span className="text-xs font-bold px-2 py-0.5 rounded" style={{ background: '#1d3557', color: '#60a5fa' }}>AA SL</span>
+              <span className="text-xs font-bold px-2 py-0.5 rounded" style={{ background: '#2d1d57', color: '#a78bfa' }}>AI SL</span>
+            </div>
           </div>
-          <p className="text-gray-400 text-lg">Diagnose your weak topics. Pass your exams.</p>
-          <div className="flex gap-3 justify-center">
-            <Link href="/auth/signup" className="bg-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 transition-colors">
-              Get started
+          <p className="text-base" style={{ color: 'var(--text-secondary)' }}>Know exactly what to study<br />before your IB Math exam.</p>
+          <div className="flex flex-col gap-2">
+            <Link href="/auth/signup" className="w-full py-3 rounded-xl text-sm font-semibold transition-opacity" style={{ background: 'var(--text-primary)', color: 'var(--bg)' }}>
+              Get started free
             </Link>
-            <Link href="/auth/login" className="border border-gray-700 text-gray-300 px-6 py-3 rounded-lg font-medium hover:border-gray-500 transition-colors">
+            <Link href="/auth/login" className="w-full py-3 rounded-xl text-sm font-medium transition-colors" style={{ border: '1px solid var(--border)', color: 'var(--text-secondary)' }}>
               Sign in
             </Link>
           </div>
