@@ -1,6 +1,7 @@
 import { createClient as createServiceClient } from '@supabase/supabase-js'
 import { createClient } from '@/lib/supabase/server'
 import TopicSelector from './TopicSelector'
+import { isPro, FREE_TOPICS, getActivePlan } from '@/lib/plans'
 
 const supabase = createServiceClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -15,9 +16,28 @@ export default async function QuizPage() {
 
   let examTopics: string[] = []
   let examCourse: string = 'aa'
+  let userPlan = 'free'
+  let quizzesToday = 0
 
   if (user) {
-    const { data: userData } = await supabase.from('users').select('active_exam_id').eq('id', user.id).single()
+    const { data: userData } = await supabase
+      .from('users')
+      .select('active_exam_id, plan, plan_expires_at')
+      .eq('id', user.id)
+      .single()
+
+    userPlan = getActivePlan(userData?.plan ?? 'free', userData?.plan_expires_at ?? null)
+
+    // Count quizzes today
+    const today = new Date()
+    today.setHours(0, 0, 0, 0)
+    const { count } = await supabase
+      .from('quiz_attempts')
+      .select('id', { count: 'exact', head: true })
+      .eq('user_id', user.id)
+      .gte('created_at', today.toISOString())
+    quizzesToday = count ?? 0
+
     if (userData?.active_exam_id) {
       const { data: examData } = await supabase
         .from('exams')
@@ -46,10 +66,14 @@ export default async function QuizPage() {
 
   const availableIds = new Set((available ?? []).map((r: any) => r.subtopic_id))
 
-  // Filter subtopics by course (show course-specific + shared)
+  const pro = isPro(userPlan as any, null)
+
+  // Filter subtopics by course
   const courseFiltered = (subtopics ?? []).filter((s: any) => {
     if (!availableIds.has(s.id)) return false
     const c = s.course ?? 'aa'
+    // Free users only see their chosen subject (aa by default)
+    if (!pro && examCourse !== c && c !== 'both') return false
     return c === examCourse || c === 'both'
   })
 
@@ -63,6 +87,9 @@ export default async function QuizPage() {
       allSubtopics={courseFiltered}
       requireAuth={!user}
       examTopics={examTopics}
+      userPlan={userPlan}
+      quizzesToday={quizzesToday}
+      freeTopics={FREE_TOPICS}
     />
   )
 }
