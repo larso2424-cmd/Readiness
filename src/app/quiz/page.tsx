@@ -77,13 +77,19 @@ export default async function QuizPage() {
     return c === examCourse || c === 'both'
   })
 
+  // For exam filter: scope to exam topics but always show all course topics for free users so they see locked ones
   const examFiltered = examTopics.length > 0
     ? courseFiltered.filter((s: any) => examTopics.includes(s.topic))
     : courseFiltered
 
+  // For free users, merge in all course topics so locked ones are always visible
+  const displaySubtopics = pro
+    ? examFiltered
+    : courseFiltered  // show everything so locked topics are visible
+
   return (
     <TopicSelector
-      subtopics={examFiltered}
+      subtopics={displaySubtopics}
       allSubtopics={courseFiltered}
       requireAuth={!user}
       examTopics={examTopics}
