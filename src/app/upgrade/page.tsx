@@ -57,7 +57,7 @@ export default function UpgradePage() {
 
           {/* Exam Mode — highlighted */}
           <div className="rounded-2xl border-2 border-orange-500 bg-gray-900 p-6 space-y-5 relative">
-            <div className="absolute -top-3 left-1/2 -translate-x-1/2">
+            <div className="absolute -top-3 left-1/2 -translate-x-1/2 whitespace-nowrap">
               <span className="bg-orange-500 text-white text-xs font-bold px-3 py-1 rounded-full">⭐ MOST POPULAR</span>
             </div>
             <div>
