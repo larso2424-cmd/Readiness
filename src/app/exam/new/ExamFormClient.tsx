@@ -12,9 +12,11 @@ const ALL_TOPICS = [
   { id: 'Calculus', label: 'Calculus' },
 ]
 
+const FREE_TOPICS = ['Number and Algebra', 'Functions']
+
 type Course = 'aa' | 'ai'
 
-export default function ExamFormClient({ userId }: { userId: string }) {
+export default function ExamFormClient({ userId, pro = false }: { userId: string; pro?: boolean }) {
   const router = useRouter()
   const [course, setCourse] = useState<Course | null>(null)
   const [name, setName] = useState('')
@@ -34,7 +36,8 @@ export default function ExamFormClient({ userId }: { userId: string }) {
   }
 
   function selectAll() {
-    setTopics(new Set(ALL_TOPICS.map((t) => t.id)))
+    const allowed = pro ? ALL_TOPICS.map(t => t.id) : FREE_TOPICS
+    setTopics(new Set(allowed))
   }
 
   async function save() {
@@ -173,6 +176,22 @@ export default function ExamFormClient({ userId }: { userId: string }) {
             <div className="space-y-2">
               {ALL_TOPICS.map((topic) => {
                 const isSelected = topics.has(topic.id)
+                const locked = !pro && !FREE_TOPICS.includes(topic.id)
+                if (locked) {
+                  return (
+                    <a
+                      key={topic.id}
+                      href="/upgrade"
+                      className="w-full flex items-center gap-3 px-4 py-3 rounded-xl border border-gray-800 bg-gray-900/50 opacity-60 hover:opacity-80 transition-opacity text-left"
+                    >
+                      <div className="w-4 h-4 rounded border-2 border-gray-700 shrink-0 flex items-center justify-center">
+                        <span className="text-[9px]">🔒</span>
+                      </div>
+                      <span className="text-sm font-medium text-gray-400 flex-1">{topic.label}</span>
+                      <span className="text-xs bg-orange-500/20 text-orange-400 font-bold px-2 py-0.5 rounded-full">PRO</span>
+                    </a>
+                  )
+                }
                 return (
                   <button
                     key={topic.id}

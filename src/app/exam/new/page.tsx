@@ -51,5 +51,5 @@ export default async function NewExamPage() {
     }
   }
 
-  return <ExamFormClient userId={user.id} />
+  return <ExamFormClient userId={user.id} pro={pro} />
 }
