@@ -3,6 +3,7 @@ import { createClient as createServiceClient } from '@supabase/supabase-js'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import Dashboard from './Dashboard'
+import { getActivePlan } from '@/lib/plans'
 
 const supabase = createServiceClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -78,9 +79,11 @@ export default async function Home() {
 
   // Fetch user profile + all their exams
   const [{ data: userData }, { data: examsData }] = await Promise.all([
-    supabase.from('users').select('active_exam_id').eq('id', user.id).single(),
+    supabase.from('users').select('active_exam_id, plan, plan_expires_at').eq('id', user.id).single(),
     supabase.from('exams').select('id, name, exam_date, target_grade, archived, course').eq('user_id', user.id).eq('archived', false).order('exam_date', { ascending: true, nullsFirst: false }),
   ])
+
+  const userPlan = getActivePlan(userData?.plan ?? 'free', userData?.plan_expires_at ?? null)
 
   const allExams = examsData ?? []
 
@@ -211,6 +214,7 @@ export default async function Home() {
       activeExam={activeExam}
       allExams={allExams}
       examDaysLeft={examDaysLeft}
+      userPlan={userPlan}
     />
   )
 }

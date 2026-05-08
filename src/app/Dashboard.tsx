@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
+import { isPro } from '@/lib/plans'
 
 interface Exam {
   id: string
@@ -31,6 +32,7 @@ interface Props {
   activeExam: Exam
   allExams: Exam[]
   examDaysLeft: number | null
+  userPlan?: string
 }
 
 const TOPIC_SHORT: Record<string, string> = {
@@ -188,9 +190,10 @@ export default function Dashboard({
   name, greeting, date, streak, overallScore, predictedGrade,
   topicMastery, examTopics, lastAttempt, recentAttempts,
   weakIds, weakSubtopicNames, skillStats,
-  activeExam, allExams, examDaysLeft,
+  activeExam, allExams, examDaysLeft, userPlan = 'free',
 }: Props) {
   const router = useRouter()
+  const pro = isPro(userPlan as any, null)
 
   async function signOut() {
     const supabase = createClient()
@@ -268,38 +271,63 @@ export default function Dashboard({
           </div>
         </div>
 
+        {/* Upgrade banner for free users */}
+        {!pro && (
+          <Link href="/upgrade" className="block bg-gradient-to-r from-orange-950 to-gray-900 border border-orange-500/30 rounded-2xl px-4 py-3.5 hover:border-orange-500/60 transition-colors">
+            <div className="flex items-center justify-between gap-3">
+              <div>
+                <p className="text-sm font-semibold text-white">🔥 Exam Mode — €19.99</p>
+                <p className="text-xs text-gray-400 mt-0.5">Unlock all topics, weak topic breakdown & study plan</p>
+              </div>
+              <span className="text-orange-400 text-sm font-bold shrink-0">Upgrade →</span>
+            </div>
+          </Link>
+        )}
+
         {/* Readiness */}
         {overallScore !== null ? (
           <div className="bg-gray-900 rounded-2xl p-5 flex items-center gap-5">
             <RadialScore score={overallScore} />
             <div className="flex-1 min-w-0">
               <p className="text-xs text-gray-400 uppercase tracking-wide font-medium">Readiness for {activeExam.name}</p>
-              <p className="text-lg font-semibold mt-0.5" style={{ color: scoreColor(overallScore) }}>
-                {scoreLabel(overallScore)}
-              </p>
-              {strongest && weakest && (
-                <p className="text-xs text-gray-400 mt-1">
-                  Strongest: {TOPIC_SHORT[strongest.topic] ?? strongest.topic}
-                  {' · '}
-                  Weakest: {TOPIC_SHORT[weakest.topic] ?? weakest.topic}
-                </p>
-              )}
-              {predictedGrade && (
-                <div className="mt-2 flex items-center gap-2">
-                  <span className="text-xs bg-gray-800 px-2.5 py-1 rounded-full font-semibold text-white">
-                    Predicted grade {predictedGrade.grade}
-                  </span>
-                  {predictedGrade.target && predictedGrade.grade < predictedGrade.target && (
-                    <span className="text-xs text-amber-400 font-medium">
-                      +{predictedGrade.neededFor - overallScore}% to hit grade {predictedGrade.target}
-                    </span>
+              {pro ? (
+                <>
+                  <p className="text-lg font-semibold mt-0.5" style={{ color: scoreColor(overallScore) }}>
+                    {scoreLabel(overallScore)}
+                  </p>
+                  {strongest && weakest && (
+                    <p className="text-xs text-gray-400 mt-1">
+                      Strongest: {TOPIC_SHORT[strongest.topic] ?? strongest.topic}
+                      {' · '}
+                      Weakest: {TOPIC_SHORT[weakest.topic] ?? weakest.topic}
+                    </p>
                   )}
-                  {predictedGrade.grade < 7 && !predictedGrade.target && (
-                    <span className="text-xs text-gray-500">
-                      +{predictedGrade.neededFor - overallScore}% → grade {predictedGrade.nextGrade}
-                    </span>
+                  {predictedGrade && (
+                    <div className="mt-2 flex items-center gap-2">
+                      <span className="text-xs bg-gray-800 px-2.5 py-1 rounded-full font-semibold text-white">
+                        Predicted grade {predictedGrade.grade}
+                      </span>
+                      {predictedGrade.target && predictedGrade.grade < predictedGrade.target && (
+                        <span className="text-xs text-amber-400 font-medium">
+                          +{predictedGrade.neededFor - overallScore}% to hit grade {predictedGrade.target}
+                        </span>
+                      )}
+                      {predictedGrade.grade < 7 && !predictedGrade.target && (
+                        <span className="text-xs text-gray-500">
+                          +{predictedGrade.neededFor - overallScore}% → grade {predictedGrade.nextGrade}
+                        </span>
+                      )}
+                    </div>
                   )}
-                </div>
+                </>
+              ) : (
+                <>
+                  <p className="text-lg font-semibold mt-0.5 text-white">You're not fully ready 🔒</p>
+                  <p className="text-xs text-gray-500 mt-1">Unlock weak topic breakdown to see exactly what to fix</p>
+                  <Link href="/upgrade" className="inline-block mt-2 text-xs text-orange-400 font-medium hover:text-orange-300 transition-colors">
+                    Unlock full breakdown →
+                  </Link>
+                </>
               )}
             </div>
           </div>
@@ -371,7 +399,7 @@ export default function Dashboard({
         </div>
 
         {/* Skill patterns */}
-        {(masteredSkills.length > 0 || strugglingSkills.length > 0) && (
+        {pro && (masteredSkills.length > 0 || strugglingSkills.length > 0) && (
           <div className="bg-gray-900 rounded-2xl p-5 space-y-4">
             <p className="text-sm font-medium text-gray-400">Skill patterns</p>
             {masteredSkills.length > 0 && (
@@ -399,6 +427,24 @@ export default function Dashboard({
               </div>
             )}
           </div>
+        )}
+
+        {/* Locked skill patterns for free users */}
+        {!pro && overallScore !== null && (
+          <Link href="/upgrade" className="block bg-gray-900 rounded-2xl p-5 hover:bg-gray-800 transition-colors">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-400">Skill patterns & weak topics</p>
+                <p className="text-xs text-gray-600 mt-1">See exactly which skills are costing you marks</p>
+              </div>
+              <span className="text-lg">🔒</span>
+            </div>
+            <div className="mt-3 flex flex-wrap gap-1.5 opacity-30 pointer-events-none select-none">
+              {['Algebra', 'Integration', 'Probability', 'Trigonometry'].map(s => (
+                <span key={s} className="text-xs bg-orange-950 border border-orange-900 text-orange-300 px-2 py-1 rounded-md">{s}</span>
+              ))}
+            </div>
+          </Link>
         )}
 
         {/* Topic mastery */}
