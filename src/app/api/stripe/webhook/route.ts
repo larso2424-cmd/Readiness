@@ -32,8 +32,9 @@ export async function POST(req: NextRequest) {
       if (!userId || !plan) break
 
       if (plan === 'exam_mode') {
-        // Expires end of May
-        const expires = new Date('2026-05-31T23:59:59Z')
+        // Expires 60 days from purchase
+        const expires = new Date()
+        expires.setDate(expires.getDate() + 60)
         await supabase.from('users').update({
           plan: 'exam_mode',
           plan_expires_at: expires.toISOString(),
