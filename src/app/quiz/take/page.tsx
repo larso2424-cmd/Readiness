@@ -3,6 +3,7 @@ import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import QuizClient from './QuizClient'
+import { getActivePlan, FREE_TOPICS } from '@/lib/plans'
 
 const supabase = createServiceClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -26,6 +27,26 @@ export default async function TakePage({
   const { data: { user } } = await userClient.auth.getUser()
   if (!user) redirect('/auth/login')
 
+  // Check user plan
+  const { data: userData } = await supabase
+    .from('users')
+    .select('plan, plan_expires_at')
+    .eq('id', user.id)
+    .single()
+  const userPlan = getActivePlan(userData?.plan ?? 'free', userData?.plan_expires_at ?? null)
+  const pro = userPlan === 'exam_mode' || userPlan === 'study_plan'
+  const isUnlimited = user.email === process.env.UNLIMITED_EMAIL
+
+  // Server-side topic restriction for free users
+  if (!pro && !isUnlimited) {
+    const { data: subtopicRows } = await supabase
+      .from('subtopics')
+      .select('id, topic')
+      .in('id', subtopicIds)
+    const hasLockedTopic = (subtopicRows ?? []).some(s => !FREE_TOPICS.includes(s.topic))
+    if (hasLockedTopic) redirect('/upgrade')
+  }
+
   // Daily limit check — 1 quiz per day
   const startOfDay = new Date()
   startOfDay.setHours(0, 0, 0, 0)
@@ -36,9 +57,7 @@ export default async function TakePage({
     .eq('user_id', user.id)
     .gte('created_at', startOfDay.toISOString())
 
-  const isUnlimited = user.email === process.env.UNLIMITED_EMAIL
-
-  if (!isUnlimited && (count ?? 0) >= 1) {
+  if (!isUnlimited && !pro && (count ?? 0) >= 1) {
     const now = new Date()
     const tomorrow = new Date(now)
     tomorrow.setDate(tomorrow.getDate() + 1)
