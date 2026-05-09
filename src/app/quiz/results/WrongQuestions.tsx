@@ -106,7 +106,7 @@ function WrongQuestionCard({ q, index }: { q: WrongQuestion; index: number }) {
           {q.common_mistakes && (
             <div className="p-3 bg-amber-950 border border-amber-900 rounded-lg text-sm text-amber-200 leading-relaxed">
               <p className="text-xs font-semibold text-amber-400 uppercase tracking-wide mb-1">Common mistake</p>
-              {q.common_mistakes}
+              <Latex text={q.common_mistakes} />
             </div>
           )}
 
