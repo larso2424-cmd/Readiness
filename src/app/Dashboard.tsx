@@ -122,7 +122,7 @@ function ExamSwitcher({ activeExam, allExams, onSwitch, onSignOut, name }: {
             {activeExam.course === 'ai' ? 'AI' : 'AA'}
           </span>
         )}
-        <span className="truncate max-w-[130px] font-medium text-[var(--text-primary)]">{activeExam.name}</span>
+        <span className="truncate max-w-[160px] font-medium text-[var(--text-primary)]">{activeExam.name}</span>
         <span className="text-[var(--text-tertiary)] text-xs">▾</span>
       </button>
 
@@ -170,14 +170,28 @@ function ExamSwitcher({ activeExam, allExams, onSwitch, onSignOut, name }: {
   )
 }
 
+function getLocalGreeting(): string {
+  const hour = new Date().getHours()
+  if (hour < 12) return 'Good morning'
+  if (hour < 17) return 'Good afternoon'
+  return 'Good evening'
+}
+
+function getLocalDate(): string {
+  return new Date().toLocaleDateString('en-GB', { weekday: 'long', month: 'long', day: 'numeric' })
+}
+
 export default function Dashboard({
-  name, greeting, date, streak, overallScore, predictedGrade,
+  name, greeting: _greeting, date: _date, streak, overallScore, predictedGrade,
   topicMastery, examTopics, lastAttempt, recentAttempts,
   weakIds, weakSubtopicNames, skillStats,
   activeExam, allExams, examDaysLeft, userPlan = 'free',
 }: Props) {
   const router = useRouter()
   const pro = isPro(userPlan as any, null)
+  // Compute greeting and date client-side so they use the user's local timezone
+  const greeting = getLocalGreeting()
+  const date = getLocalDate()
 
   async function signOut() {
     const supabase = createClient()

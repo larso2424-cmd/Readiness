@@ -12,12 +12,6 @@ const supabase = createServiceClient(
 
 export const dynamic = 'force-dynamic'
 
-function getGreeting() {
-  const hour = new Date().getHours()
-  if (hour < 12) return 'Good morning'
-  if (hour < 17) return 'Good afternoon'
-  return 'Good evening'
-}
 
 function computeStreak(attempts: { created_at: string }[]): number {
   if (!attempts.length) return 0
@@ -194,15 +188,15 @@ export default async function Home() {
     .map((s) => s.subtopic)
 
   const rawName = user.email?.split('@')[0] ?? 'there'
-  const name = rawName.split(/[._\d]/)[0] || rawName
-  const greeting = getGreeting()
-  const date = new Date().toLocaleDateString('en-GB', { weekday: 'long', month: 'long', day: 'numeric' })
+  const firstName = rawName.split(/[._\-\d]/)[0] || rawName
+  // Capitalise first letter, lowercase rest
+  const name = firstName.charAt(0).toUpperCase() + firstName.slice(1).toLowerCase()
 
   return (
     <Dashboard
       name={name}
-      greeting={greeting}
-      date={date}
+      greeting=""
+      date=""
       streak={streak}
       overallScore={overallScore}
       predictedGrade={predictedGrade}
