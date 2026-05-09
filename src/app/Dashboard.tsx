@@ -208,7 +208,8 @@ export default function Dashboard({
         {/* Header */}
         <div className="flex items-center justify-between fade-up fade-up-1 relative z-10">
           <div>
-            <p className="text-xs text-[var(--text-tertiary)] font-medium tracking-wide uppercase">{date}</p>
+            {/* 1. Sharper date label */}
+            <p className="text-[11px] text-[var(--text-secondary)] font-medium tracking-wide uppercase">{date}</p>
             <h1 className="text-xl font-semibold text-[var(--text-primary)] mt-0.5">{greeting}, {name}</h1>
           </div>
           <div className="flex items-center gap-2">
@@ -222,61 +223,73 @@ export default function Dashboard({
           </div>
         </div>
 
-        {/* Exam context */}
-        <div className="flex items-center justify-between px-4 py-2.5 rounded-xl bg-white/[0.03] border border-[var(--border-subtle)] fade-up fade-up-2">
-          <div className="flex flex-wrap gap-1.5">
+        {/* Exam context — 2. Softer, thinner topic pills */}
+        <div className="flex items-center justify-between px-4 py-2 rounded-xl bg-white/[0.02] fade-up fade-up-2" style={{ border: '1px solid rgba(255,255,255,0.04)' }}>
+          <div className="flex flex-wrap gap-1">
             {examTopics.map((t) => (
-              <span key={t} className="text-xs text-[var(--text-tertiary)] bg-white/5 px-2 py-0.5 rounded-md">
+              <span key={t} className="text-[11px] font-medium px-2 py-px rounded-md" style={{
+                color: 'var(--text-secondary)',
+                background: 'rgba(255,255,255,0.04)',
+              }}>
                 {TOPIC_SHORT[t] ?? t}
               </span>
             ))}
           </div>
           <div className="flex items-center gap-3 shrink-0 ml-3">
             {examDaysLeft !== null && examDaysLeft >= 0 && (
-              <span className={`text-xs font-medium whitespace-nowrap ${daysUrgency(examDaysLeft)}`}>
+              <span className={`text-[11px] font-medium whitespace-nowrap ${daysUrgency(examDaysLeft)}`}>
                 {daysLabel(examDaysLeft)}
               </span>
             )}
           </div>
         </div>
 
-        {/* Upgrade banner — subtle, premium */}
+        {/* Upgrade banner — 4. No hard border, internal glow instead */}
         {!pro && (
           <Link href="/upgrade" className="block fade-up fade-up-2 group">
-            <div className="rounded-xl border border-[var(--accent)]/20 bg-[var(--accent-muted)] px-4 py-3.5 flex items-center justify-between hover:border-[var(--accent)]/40 transition-all duration-300">
+            <div className="rounded-xl px-4 py-3.5 flex items-center justify-between transition-all duration-300"
+              style={{
+                background: 'rgba(224,122,95,0.09)',
+                boxShadow: 'inset 0 0 0 1px rgba(224,122,95,0.15)',
+              }}>
               <div>
-                <p className="text-sm font-semibold text-[var(--text-primary)]">Exam Mode</p>
-                <p className="text-xs text-[var(--text-secondary)] mt-0.5">Unlock all topics, weak topics & study plan — €19.99</p>
+                <p className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>Exam Mode</p>
+                {/* 1. Sharper subtitle */}
+                <p className="text-xs mt-0.5" style={{ color: '#9aa3b0' }}>Unlock all topics, weak topics & study plan — €19.99</p>
               </div>
-              <span className="text-[var(--accent)] text-sm font-medium shrink-0 ml-4 group-hover:translate-x-0.5 transition-transform">→</span>
+              <span className="text-sm font-medium shrink-0 ml-4 group-hover:translate-x-0.5 transition-transform" style={{ color: 'var(--accent)' }}>→</span>
             </div>
           </Link>
         )}
 
-        {/* Readiness — emotional center */}
+        {/* Readiness card — no hard border */}
         {overallScore !== null ? (
-          <div className="rounded-2xl bg-[var(--bg-card)] border border-[var(--border)] p-6 fade-up fade-up-3">
-            <p className="text-xs text-[var(--text-tertiary)] uppercase tracking-wider font-medium mb-4">{activeExam.name}</p>
+          <div className="rounded-2xl p-6 fade-up fade-up-3" style={{
+            background: 'var(--bg-card)',
+            boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.05)',
+          }}>
+            {/* 1. Sharper label */}
+            <p className="text-[11px] font-medium uppercase tracking-wider mb-4" style={{ color: '#7a8394' }}>{activeExam.name}</p>
             <div className="flex items-center gap-6">
               <ReadinessRing score={overallScore} />
               <div className="flex-1 min-w-0">
                 {pro ? (
                   <>
-                    <p className="text-lg font-semibold text-[var(--text-primary)]" style={{ color: scoreColor(overallScore) }}>
+                    <p className="text-lg font-semibold" style={{ color: scoreColor(overallScore) }}>
                       {scoreLabel(overallScore)}
                     </p>
                     {strongest && weakest && (
-                      <p className="text-xs text-[var(--text-tertiary)] mt-1.5 leading-relaxed">
+                      <p className="text-xs mt-1.5 leading-relaxed" style={{ color: '#7a8394' }}>
                         Strong in {TOPIC_SHORT[strongest.topic] ?? strongest.topic} · Weakest in {TOPIC_SHORT[weakest.topic] ?? weakest.topic}
                       </p>
                     )}
                     {predictedGrade && (
                       <div className="mt-3 flex items-center gap-2">
-                        <span className="text-xs bg-white/8 px-2.5 py-1 rounded-lg font-medium text-[var(--text-primary)]">
+                        <span className="text-xs px-2.5 py-1 rounded-lg font-medium" style={{ background: 'rgba(255,255,255,0.06)', color: 'var(--text-primary)' }}>
                           Predicted grade {predictedGrade.grade}
                         </span>
                         {predictedGrade.grade < 7 && (
-                          <span className="text-xs text-[var(--text-tertiary)]">
+                          <span className="text-xs" style={{ color: '#7a8394' }}>
                             +{predictedGrade.neededFor - overallScore}% → grade {predictedGrade.nextGrade}
                           </span>
                         )}
@@ -285,9 +298,9 @@ export default function Dashboard({
                   </>
                 ) : (
                   <>
-                    <p className="text-base font-semibold text-[var(--text-primary)]">You're not fully ready</p>
-                    <p className="text-xs text-[var(--text-tertiary)] mt-1.5 leading-relaxed">Unlock your weak topic breakdown to know exactly what to study</p>
-                    <Link href="/upgrade" className="inline-block mt-3 text-xs font-medium text-[var(--accent)] hover:opacity-80 transition-opacity">
+                    <p className="text-base font-semibold" style={{ color: 'var(--text-primary)' }}>You're not fully ready</p>
+                    <p className="text-xs mt-1.5 leading-relaxed" style={{ color: '#7a8394' }}>Unlock your weak topic breakdown to know exactly what to study</p>
+                    <Link href="/upgrade" className="inline-block mt-3 text-xs font-medium hover:opacity-80 transition-opacity" style={{ color: 'var(--accent)' }}>
                       See full breakdown →
                     </Link>
                   </>
@@ -296,45 +309,58 @@ export default function Dashboard({
             </div>
           </div>
         ) : (
-          <div className="rounded-2xl bg-[var(--bg-card)] border border-[var(--border)] p-8 text-center fade-up fade-up-3 space-y-2">
-            <p className="text-[var(--text-primary)] font-medium">No data yet</p>
-            <p className="text-sm text-[var(--text-tertiary)]">Take your first quiz to see your readiness score</p>
+          <div className="rounded-2xl p-8 text-center fade-up fade-up-3 space-y-2" style={{
+            background: 'var(--bg-card)',
+            boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.05)',
+          }}>
+            <p className="font-medium" style={{ color: 'var(--text-primary)' }}>No data yet</p>
+            <p className="text-sm" style={{ color: '#7a8394' }}>Take your first quiz to see your readiness score</p>
           </div>
         )}
 
-        {/* Quick actions */}
-        <div className="rounded-2xl bg-[var(--bg-card)] border border-[var(--border)] p-5 space-y-3 fade-up fade-up-3">
-          <p className="text-xs text-[var(--text-tertiary)] uppercase tracking-wider font-medium">Practice</p>
-          <div className="grid grid-cols-2 gap-2.5">
+        {/* Practice grid — 3. Larger, more luxurious cards */}
+        <div className="rounded-2xl p-5 fade-up fade-up-3" style={{
+          background: 'var(--bg-card)',
+          boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.05)',
+        }}>
+          <p className="text-[11px] font-medium uppercase tracking-wider mb-4" style={{ color: '#7a8394' }}>Practice</p>
+          <div className="grid grid-cols-2 gap-3">
             {weakIds.length > 0 && (
               <Link href={`/quiz/take?subtopics=${weakIds.join(',')}`}
-                className="rounded-xl bg-[var(--bg-elevated)] hover:bg-white/8 border border-[var(--border-subtle)] p-4 transition-colors group">
-                <p className="text-sm font-medium text-[var(--text-primary)]">Weak topics</p>
-                <p className="text-xs text-[var(--text-tertiary)] mt-1 truncate">{weakSubtopicNames.slice(0, 2).join(', ')}</p>
+                className="rounded-xl p-5 transition-colors group"
+                style={{ background: 'rgba(255,255,255,0.035)', boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.06)' }}>
+                <p className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>Weak topics</p>
+                <p className="text-xs mt-1.5 leading-relaxed" style={{ color: '#7a8394' }}>{weakSubtopicNames.slice(0, 2).join(', ')}</p>
               </Link>
             )}
             <Link href="/quiz"
-              className="rounded-xl bg-[var(--bg-elevated)] hover:bg-white/8 border border-[var(--border-subtle)] p-4 transition-colors">
-              <p className="text-sm font-medium text-[var(--text-primary)]">By topic</p>
-              <p className="text-xs text-[var(--text-tertiary)] mt-1">Choose subtopics</p>
+              className="rounded-xl p-5 transition-colors"
+              style={{ background: 'rgba(255,255,255,0.035)', boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.06)' }}>
+              <p className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>By topic</p>
+              <p className="text-xs mt-1.5" style={{ color: '#7a8394' }}>Choose subtopics</p>
             </Link>
             <Link href="/quiz/random"
-              className="rounded-xl bg-[var(--bg-elevated)] hover:bg-white/8 border border-[var(--border-subtle)] p-4 transition-colors">
-              <p className="text-sm font-medium text-[var(--text-primary)]">Random mix</p>
-              <p className="text-xs text-[var(--text-tertiary)] mt-1">All exam topics</p>
+              className="rounded-xl p-5 transition-colors"
+              style={{ background: 'rgba(255,255,255,0.035)', boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.06)' }}>
+              <p className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>Random mix</p>
+              <p className="text-xs mt-1.5" style={{ color: '#7a8394' }}>All exam topics</p>
             </Link>
             <Link href="/quiz/mock"
-              className="rounded-xl bg-[var(--bg-elevated)] hover:bg-white/8 border border-[var(--border-subtle)] p-4 transition-colors">
-              <p className="text-sm font-medium text-[var(--text-primary)]">Mock exam</p>
-              <p className="text-xs text-[var(--text-tertiary)] mt-1">60 min · timed</p>
+              className="rounded-xl p-5 transition-colors"
+              style={{ background: 'rgba(255,255,255,0.035)', boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.06)' }}>
+              <p className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>Mock exam</p>
+              <p className="text-xs mt-1.5" style={{ color: '#7a8394' }}>60 min · timed</p>
             </Link>
           </div>
         </div>
 
         {/* Last attempt */}
         {lastAttempt && (
-          <div className="rounded-2xl bg-[var(--bg-card)] border border-[var(--border)] p-5 fade-up fade-up-4">
-            <p className="text-xs text-[var(--text-tertiary)] uppercase tracking-wider font-medium mb-4">Last session</p>
+          <div className="rounded-2xl p-5 fade-up fade-up-4" style={{
+            background: 'var(--bg-card)',
+            boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.05)',
+          }}>
+            <p className="text-[11px] font-medium uppercase tracking-wider mb-4" style={{ color: '#7a8394' }}>Last session</p>
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-4">
                 <div className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold shrink-0"
@@ -342,13 +368,17 @@ export default function Dashboard({
                   {lastAttempt.readiness_score}%
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-[var(--text-primary)]">{lastAttempt.correct_count} of {lastAttempt.total_count} correct</p>
-                  <p className="text-xs text-[var(--text-tertiary)] mt-0.5">{formatDate(lastAttempt.created_at)}</p>
+                  <p className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>{lastAttempt.correct_count} of {lastAttempt.total_count} correct</p>
+                  <p className="text-xs mt-0.5" style={{ color: '#7a8394' }}>{formatDate(lastAttempt.created_at)}</p>
                 </div>
               </div>
               <Link
                 href={weakIds.length > 0 ? `/quiz/take?subtopics=${weakIds.join(',')}` : '/quiz'}
-                className="text-xs font-medium text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors border border-[var(--border)] px-3 py-1.5 rounded-lg hover:border-white/15"
+                className="text-xs font-medium transition-colors px-3 py-1.5 rounded-lg"
+                style={{
+                  color: 'var(--text-secondary)',
+                  boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.08)',
+                }}
               >
                 {weakIds.length > 0 ? 'Retake weak' : 'New quiz'}
               </Link>
@@ -357,8 +387,11 @@ export default function Dashboard({
         )}
 
         {/* Topic mastery */}
-        <div className="rounded-2xl bg-[var(--bg-card)] border border-[var(--border)] p-5 space-y-4 fade-up fade-up-4">
-          <p className="text-xs text-[var(--text-tertiary)] uppercase tracking-wider font-medium">Topic mastery</p>
+        <div className="rounded-2xl p-5 space-y-4 fade-up fade-up-4" style={{
+          background: 'var(--bg-card)',
+          boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.05)',
+        }}>
+          <p className="text-[11px] font-medium uppercase tracking-wider" style={{ color: '#7a8394' }}>Topic mastery</p>
           <div className="space-y-3.5">
             {examTopics.map((topic) => {
               const entry = topicMastery.find((t) => t.topic === topic)
@@ -366,17 +399,18 @@ export default function Dashboard({
               return (
                 <div key={topic} className="space-y-1.5">
                   <div className="flex justify-between items-baseline">
-                    <span className="text-sm text-[var(--text-secondary)]">{TOPIC_SHORT[topic] ?? topic}</span>
+                    {/* 1. Sharper topic labels */}
+                    <span className="text-sm font-medium" style={{ color: '#9aa3b0' }}>{TOPIC_SHORT[topic] ?? topic}</span>
                     {score !== undefined ? (
                       <span className="text-xs font-semibold tabular-nums" style={{ color: scoreColor(score) }}>{score}%</span>
                     ) : (
-                      <span className="text-xs text-[var(--text-tertiary)]">No data</span>
+                      <span className="text-xs" style={{ color: 'var(--text-tertiary)' }}>No data</span>
                     )}
                   </div>
-                  <div className="h-1 bg-white/5 rounded-full overflow-hidden">
+                  <div className="h-1 rounded-full overflow-hidden" style={{ background: 'rgba(255,255,255,0.05)' }}>
                     {score !== undefined && (
                       <div className="h-full rounded-full transition-all duration-700"
-                        style={{ width: `${score}%`, backgroundColor: scoreColor(score), opacity: 0.8 }} />
+                        style={{ width: `${score}%`, backgroundColor: scoreColor(score), opacity: 0.75 }} />
                     )}
                   </div>
                 </div>
@@ -385,16 +419,22 @@ export default function Dashboard({
           </div>
         </div>
 
-        {/* Skill patterns — pro only */}
+        {/* Skill patterns — pro */}
         {pro && (masteredSkills.length > 0 || strugglingSkills.length > 0) && (
-          <div className="rounded-2xl bg-[var(--bg-card)] border border-[var(--border)] p-5 space-y-4 fade-up fade-up-5">
-            <p className="text-xs text-[var(--text-tertiary)] uppercase tracking-wider font-medium">Skill patterns</p>
+          <div className="rounded-2xl p-5 space-y-4 fade-up fade-up-5" style={{
+            background: 'var(--bg-card)',
+            boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.05)',
+          }}>
+            <p className="text-[11px] font-medium uppercase tracking-wider" style={{ color: '#7a8394' }}>Skill patterns</p>
             {masteredSkills.length > 0 && (
               <div className="space-y-2">
-                <p className="text-xs text-[#5cb88a] font-medium">Mastered</p>
+                <p className="text-xs font-medium" style={{ color: '#5cb88a' }}>Mastered</p>
                 <div className="flex flex-wrap gap-1.5">
                   {masteredSkills.map((skill) => (
-                    <span key={skill} className="text-xs bg-[#5cb88a]/10 border border-[#5cb88a]/15 text-[#5cb88a] px-2.5 py-1 rounded-lg">
+                    <span key={skill} className="text-[11px] font-medium px-2.5 py-0.5 rounded-md" style={{
+                      background: 'rgba(92,184,138,0.08)',
+                      color: '#5cb88a',
+                    }}>
                       {formatSkillTag(skill)}
                     </span>
                   ))}
@@ -403,10 +443,13 @@ export default function Dashboard({
             )}
             {strugglingSkills.length > 0 && (
               <div className="space-y-2">
-                <p className="text-xs text-[var(--accent)] font-medium">Needs work</p>
+                <p className="text-xs font-medium" style={{ color: 'var(--accent)' }}>Needs work</p>
                 <div className="flex flex-wrap gap-1.5">
                   {strugglingSkills.map((skill) => (
-                    <span key={skill} className="text-xs bg-[var(--accent-muted)] border border-[var(--accent)]/15 text-[var(--accent)] px-2.5 py-1 rounded-lg">
+                    <span key={skill} className="text-[11px] font-medium px-2.5 py-0.5 rounded-md" style={{
+                      background: 'var(--accent-muted)',
+                      color: 'var(--accent)',
+                    }}>
                       {formatSkillTag(skill)}
                     </span>
                   ))}
@@ -418,17 +461,23 @@ export default function Dashboard({
 
         {/* Locked skills — free users */}
         {!pro && overallScore !== null && (
-          <Link href="/upgrade" className="block rounded-2xl bg-[var(--bg-card)] border border-[var(--border)] p-5 hover:border-white/10 transition-colors fade-up fade-up-5">
+          <Link href="/upgrade" className="block rounded-2xl p-5 hover:bg-white/[0.02] transition-colors fade-up fade-up-5" style={{
+            background: 'var(--bg-card)',
+            boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.05)',
+          }}>
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-xs text-[var(--text-tertiary)] uppercase tracking-wider font-medium mb-1">Skill patterns</p>
-                <p className="text-sm text-[var(--text-tertiary)]">Unlock to see which skills need work</p>
+                <p className="text-[11px] font-medium uppercase tracking-wider mb-1" style={{ color: '#7a8394' }}>Skill patterns</p>
+                <p className="text-sm" style={{ color: '#7a8394' }}>Unlock to see which skills need work</p>
               </div>
-              <span className="text-[var(--text-tertiary)] text-base">🔒</span>
+              <span style={{ color: 'var(--text-tertiary)' }}>🔒</span>
             </div>
             <div className="mt-3 flex flex-wrap gap-1.5 opacity-20 pointer-events-none select-none">
               {['Algebra', 'Integration', 'Probability', 'Trig'].map(s => (
-                <span key={s} className="text-xs bg-[var(--accent-muted)] border border-[var(--accent)]/15 text-[var(--accent)] px-2.5 py-1 rounded-lg">{s}</span>
+                <span key={s} className="text-[11px] font-medium px-2.5 py-0.5 rounded-md" style={{
+                  background: 'var(--accent-muted)',
+                  color: 'var(--accent)',
+                }}>{s}</span>
               ))}
             </div>
           </Link>
@@ -436,19 +485,22 @@ export default function Dashboard({
 
         {/* Recent activity */}
         {recentAttempts.length > 1 && (
-          <div className="rounded-2xl bg-[var(--bg-card)] border border-[var(--border)] p-5 space-y-3 fade-up fade-up-5">
-            <p className="text-xs text-[var(--text-tertiary)] uppercase tracking-wider font-medium">Recent activity</p>
+          <div className="rounded-2xl p-5 space-y-3 fade-up fade-up-5" style={{
+            background: 'var(--bg-card)',
+            boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.05)',
+          }}>
+            <p className="text-[11px] font-medium uppercase tracking-wider" style={{ color: '#7a8394' }}>Recent activity</p>
             <div className="space-y-2">
               {recentAttempts.map((attempt) => (
-                <div key={attempt.id} className="flex items-center justify-between py-1.5 border-b border-[var(--border-subtle)] last:border-0">
+                <div key={attempt.id} className="flex items-center justify-between py-1.5" style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
                   <div className="flex items-center gap-3">
                     <div className="w-7 h-7 rounded-full flex items-center justify-center text-[11px] font-semibold shrink-0"
                       style={{ background: `${scoreColor(attempt.readiness_score)}15`, color: scoreColor(attempt.readiness_score) }}>
                       {attempt.readiness_score}
                     </div>
-                    <p className="text-sm text-[var(--text-secondary)]">{attempt.correct_count}/{attempt.total_count} correct</p>
+                    <p className="text-sm" style={{ color: '#9aa3b0' }}>{attempt.correct_count}/{attempt.total_count} correct</p>
                   </div>
-                  <p className="text-xs text-[var(--text-tertiary)]">{formatDate(attempt.created_at)}</p>
+                  <p className="text-xs" style={{ color: 'var(--text-tertiary)' }}>{formatDate(attempt.created_at)}</p>
                 </div>
               ))}
             </div>
@@ -456,9 +508,12 @@ export default function Dashboard({
         )}
 
         {recentAttempts.length === 0 && overallScore === null && (
-          <div className="rounded-2xl bg-[var(--bg-card)] border border-[var(--border)] p-10 text-center space-y-4 fade-up fade-up-3">
-            <p className="text-[var(--text-secondary)] font-medium">Ready when you are</p>
-            <p className="text-sm text-[var(--text-tertiary)]">Take your first quiz to start tracking your readiness</p>
+          <div className="rounded-2xl p-10 text-center space-y-4 fade-up fade-up-3" style={{
+            background: 'var(--bg-card)',
+            boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.05)',
+          }}>
+            <p className="font-medium" style={{ color: 'var(--text-secondary)' }}>Ready when you are</p>
+            <p className="text-sm" style={{ color: '#7a8394' }}>Take your first quiz to start tracking your readiness</p>
             <Link href="/quiz"
               className="inline-block mt-2 text-sm font-medium px-5 py-2.5 rounded-xl transition-colors"
               style={{ background: 'var(--accent)', color: 'white' }}>
