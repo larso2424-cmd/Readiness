@@ -33,9 +33,9 @@ export default async function TakePage({
     .select('plan, plan_expires_at')
     .eq('id', user.id)
     .single()
-  const userPlan = getActivePlan(userData?.plan ?? 'free', userData?.plan_expires_at ?? null)
-  const pro = userPlan === 'exam_mode' || userPlan === 'study_plan'
   const isUnlimited = user.email === process.env.UNLIMITED_EMAIL
+  const userPlan = isUnlimited ? 'study_plan' : getActivePlan(userData?.plan ?? 'free', userData?.plan_expires_at ?? null)
+  const pro = isUnlimited || userPlan === 'exam_mode' || userPlan === 'study_plan'
 
   // Server-side topic restriction for free users
   if (!pro && !isUnlimited) {

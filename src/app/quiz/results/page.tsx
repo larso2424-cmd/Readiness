@@ -62,10 +62,15 @@ export default async function ResultsPage({
   const { data: { user } } = await userClient.auth.getUser()
   let pro = false
   if (user) {
-    const { data: userData } = await supabase
-      .from('users').select('plan, plan_expires_at').eq('id', user.id).single()
-    const userPlan = getActivePlan(userData?.plan ?? 'free', userData?.plan_expires_at ?? null)
-    pro = userPlan === 'exam_mode' || userPlan === 'study_plan'
+    const isOwner = user.email === process.env.UNLIMITED_EMAIL
+    if (isOwner) {
+      pro = true
+    } else {
+      const { data: userData } = await supabase
+        .from('users').select('plan, plan_expires_at').eq('id', user.id).single()
+      const userPlan = getActivePlan(userData?.plan ?? 'free', userData?.plan_expires_at ?? null)
+      pro = userPlan === 'exam_mode' || userPlan === 'study_plan'
+    }
   }
 
   const wrongItems = (params.wrong ?? '')

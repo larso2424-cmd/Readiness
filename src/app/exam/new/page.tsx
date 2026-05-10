@@ -23,8 +23,9 @@ export default async function NewExamPage() {
     .eq('id', user.id)
     .single()
 
-  const userPlan = getActivePlan(userData?.plan ?? 'free', userData?.plan_expires_at ?? null)
-  const pro = userPlan === 'exam_mode' || userPlan === 'study_plan'
+  const isOwner = user.email === process.env.UNLIMITED_EMAIL
+  const userPlan = isOwner ? 'study_plan' : getActivePlan(userData?.plan ?? 'free', userData?.plan_expires_at ?? null)
+  const pro = isOwner || userPlan === 'exam_mode' || userPlan === 'study_plan'
 
   if (!pro) {
     // Count existing exams
