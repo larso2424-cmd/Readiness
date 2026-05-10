@@ -22,9 +22,9 @@ export default function MathBackground() {
       el.textContent = sym
       el.style.cssText = `
         position: absolute;
-        font-size: ${Math.random() * 10 + 11}px;
+        font-size: ${Math.random() * 12 + 13}px;
         font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
-        color: rgba(255,255,255,${Math.random() * 0.04 + 0.02});
+        color: rgba(255,255,255,${Math.random() * 0.07 + 0.05});
         pointer-events: none;
         user-select: none;
         white-space: nowrap;
