@@ -24,7 +24,7 @@ export default function MathBackground() {
         position: absolute;
         font-size: ${Math.random() * 12 + 13}px;
         font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
-        color: rgba(255,255,255,${Math.random() * 0.07 + 0.05});
+        color: rgba(255,255,255,${Math.random() * 0.08 + 0.12});
         pointer-events: none;
         user-select: none;
         white-space: nowrap;
