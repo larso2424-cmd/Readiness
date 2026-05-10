@@ -53,7 +53,7 @@ export default async function Home() {
     return (
       <main className="relative min-h-screen flex flex-col items-center justify-center px-4" style={{ background: 'var(--bg)' }}>
         <MathBackground />
-        <div className="relative max-w-sm w-full text-center space-y-6 fade-up fade-up-1" style={{ zIndex: 1 }}>
+        <div className="relative max-w-sm w-full text-center space-y-6 fade-up fade-up-1" style={{ zIndex: 1, background: 'var(--bg)', borderRadius: '2rem', padding: '2.5rem 1.5rem' }}>
           <div className="space-y-2">
             <h1 className="text-3xl font-bold" style={{ color: 'var(--text-primary)' }}>StudyReady</h1>
             <div className="flex gap-2 justify-center">
