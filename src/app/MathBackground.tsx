@@ -36,17 +36,28 @@ export default function MathBackground() {
 
     const items: { el: HTMLSpanElement; x: number; y: number; vx: number; vy: number }[] = []
 
+    // Center "no-go" zone (where the card content lives)
+    const NO_X1 = 10, NO_X2 = 90
+    const NO_Y1 = 8,  NO_Y2 = 92
+
+    function inDeadZone(x: number, y: number) {
+      return x > NO_X1 && x < NO_X2 && y > NO_Y1 && y < NO_Y2
+    }
+
+    // Generate positions only in the margin strips
+    function safePosition(): { x: number; y: number } {
+      // Pick one of 4 strips: top, bottom, left, right
+      const strip = Math.floor(Math.random() * 4)
+      if (strip === 0) return { x: Math.random() * 100, y: Math.random() * NO_Y1 }
+      if (strip === 1) return { x: Math.random() * 100, y: NO_Y2 + Math.random() * (100 - NO_Y2) }
+      if (strip === 2) return { x: Math.random() * NO_X1, y: Math.random() * 100 }
+      return { x: NO_X2 + Math.random() * (100 - NO_X2), y: Math.random() * 100 }
+    }
+
     // Build a list of TOTAL symbols by cycling through SYMBOLS
     const pool: string[] = []
     for (let i = 0; i < TOTAL; i++) pool.push(SYMBOLS[i % SYMBOLS.length])
-    // Shuffle
     pool.sort(() => Math.random() - 0.5)
-
-    // Grid: find cols/rows that fit TOTAL symbols as evenly as possible
-    const COLS = 13
-    const ROWS = Math.ceil(TOTAL / COLS)
-    const cellW = 100 / COLS
-    const cellH = 100 / ROWS
 
     pool.forEach((sym, i) => {
       const el = document.createElement('span')
@@ -62,10 +73,7 @@ export default function MathBackground() {
         font-weight: 500;
         letter-spacing: 0.02em;
       `
-      const col = i % COLS
-      const row = Math.floor(i / COLS)
-      const x = col * cellW + Math.random() * cellW * 0.8 + cellW * 0.1
-      const y = row * cellH + Math.random() * cellH * 0.8 + cellH * 0.1
+      const { x, y } = safePosition()
       el.style.left = `${x}%`
       el.style.top = `${y}%`
       container.appendChild(el)
@@ -84,10 +92,18 @@ export default function MathBackground() {
       items.forEach((item) => {
         item.x += item.vx
         item.y += item.vy
+        // Wrap around screen edges
         if (item.x < -5) item.x = 105
         if (item.x > 105) item.x = -5
         if (item.y < -5) item.y = 105
         if (item.y > 105) item.y = -5
+        // Bounce out of center dead zone
+        if (inDeadZone(item.x, item.y)) {
+          item.vx = -item.vx
+          item.vy = -item.vy
+          item.x += item.vx * 4
+          item.y += item.vy * 4
+        }
         item.el.style.left = `${item.x}%`
         item.el.style.top = `${item.y}%`
       })
