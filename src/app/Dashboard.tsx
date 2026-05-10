@@ -220,36 +220,32 @@ export default function Dashboard({
       <div className="max-w-xl mx-auto px-5 py-7 space-y-5">
 
         {/* Header */}
-        <div className="flex items-center justify-between fade-up fade-up-1 relative z-10">
-          <div>
-            {/* 1. Sharper date label */}
+        <div className="fade-up fade-up-1 relative z-10 space-y-2">
+          {/* Top row: date + badges */}
+          <div className="flex items-center justify-between">
             <p className="text-[11px] text-[var(--text-secondary)] font-medium tracking-wide uppercase">{date}</p>
-            <h1 className="text-xl font-semibold text-[var(--text-primary)] mt-0.5">{greeting}, {name}</h1>
+            <div className="flex items-center gap-2">
+              {streak > 0 && (
+                <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white/5 text-xs font-medium text-[var(--text-secondary)]">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#5cb88a]" />
+                  {streak}d
+                </div>
+              )}
+              {pro ? (
+                <div className="flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-semibold" style={{ background: 'rgba(92,184,138,0.1)', color: '#5cb88a' }}>
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#5cb88a]" />
+                  {userPlan === 'study_plan' ? 'Study Plan' : 'Exam Mode'}
+                </div>
+              ) : (
+                <Link href="/upgrade" className="flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-semibold transition-opacity hover:opacity-80" style={{ background: 'var(--accent-muted)', color: 'var(--accent)' }}>
+                  Upgrade
+                </Link>
+              )}
+            </div>
           </div>
-          <div className="flex items-center gap-2">
-            {streak > 0 && (
-              <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white/5 text-xs font-medium text-[var(--text-secondary)]">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#5cb88a]" />
-                {streak}d
-              </div>
-            )}
-            {/* Plan badge */}
-            {pro ? (
-              <div className="flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-semibold" style={{
-                background: 'rgba(92,184,138,0.1)',
-                color: '#5cb88a',
-              }}>
-                <span className="w-1.5 h-1.5 rounded-full bg-[#5cb88a]" />
-                {userPlan === 'study_plan' ? 'Study Plan' : 'Exam Mode'}
-              </div>
-            ) : (
-              <Link href="/upgrade" className="flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-semibold transition-opacity hover:opacity-80" style={{
-                background: 'var(--accent-muted)',
-                color: 'var(--accent)',
-              }}>
-                Upgrade
-              </Link>
-            )}
+          {/* Bottom row: greeting + exam switcher */}
+          <div className="flex items-center justify-between">
+            <h1 className="text-xl font-semibold text-[var(--text-primary)]">{greeting}, {name}</h1>
             <ExamSwitcher activeExam={activeExam} allExams={allExams} onSwitch={switchExam} onSignOut={signOut} name={name} />
           </div>
         </div>

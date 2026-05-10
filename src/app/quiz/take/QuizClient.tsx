@@ -75,7 +75,6 @@ export default function QuizClient({
   const [submitting, setSubmitting] = useState(false)
   const [elapsed, setElapsed] = useState(0)
 
-  // Per-question timing
   const quizStartTime = useRef(Date.now())
   const questionStartTime = useRef(Date.now())
   const questionTimes = useRef<number[]>(Array(questions.length).fill(0))
@@ -100,18 +99,14 @@ export default function QuizClient({
     const next = [...answers]
     next[current] = letter
     setAnswers(next)
-    // Don't reveal yet — wait for confidence rating
   }
 
   function selectConfidence(rating: Confidence) {
     if (answers[current] === null) return
-    // Record time for this question
     questionTimes.current[current] = Math.round((Date.now() - questionStartTime.current) / 1000)
-
     const nextC = [...confidences]
     nextC[current] = rating
     setConfidences(nextC)
-
     const nextR = [...revealed]
     nextR[current] = true
     setRevealed(nextR)
@@ -127,18 +122,24 @@ export default function QuizClient({
     return ({ A: q.option_a, B: q.option_b, C: q.option_c, D: q.option_d } as any)[letter]
   }
 
-  function optionStyle(letter: string): string {
-    if (answer === null) return 'border-gray-200 bg-white hover:border-blue-300 cursor-pointer'
-    if (!isRevealed) return letter === answer ? 'border-blue-400 bg-blue-50' : 'border-gray-200 bg-white opacity-50'
-    if (letter === q.correct_answer) return 'border-green-400 bg-green-50'
-    if (letter === answer) return 'border-red-400 bg-red-50'
-    return 'border-gray-200 bg-gray-50 opacity-60'
+  function optionStyle(letter: string): React.CSSProperties {
+    const base: React.CSSProperties = {
+      background: 'rgba(255,255,255,0.03)',
+      border: '1px solid rgba(255,255,255,0.08)',
+      color: 'var(--text-primary)',
+    }
+    if (answer === null) return base
+    if (!isRevealed) {
+      if (letter === answer) return { background: 'rgba(96,165,250,0.12)', border: '1px solid rgba(96,165,250,0.4)', color: 'var(--text-primary)' }
+      return { ...base, opacity: 0.4 }
+    }
+    if (letter === q.correct_answer) return { background: 'rgba(92,184,138,0.12)', border: '1px solid rgba(92,184,138,0.4)', color: 'var(--text-primary)' }
+    if (letter === answer) return { background: 'rgba(196,92,92,0.12)', border: '1px solid rgba(196,92,92,0.4)', color: 'var(--text-primary)' }
+    return { ...base, opacity: 0.4 }
   }
 
   async function finish() {
-    // Record time for last question
     questionTimes.current[current] = Math.round((Date.now() - questionStartTime.current) / 1000)
-
     setSubmitting(true)
     const totalSeconds = Math.floor((Date.now() - quizStartTime.current) / 1000)
     const correctCount = answers.filter((a, i) => a === questions[i].correct_answer).length
@@ -155,12 +156,10 @@ export default function QuizClient({
       .map(([id]) => id)
 
     const score = Math.round((correctCount / questions.length) * 100)
-
     const wrongItems = questions
       .map((q, i) => ({ id: q.id, given: answers[i], correct: q.correct_answer }))
       .filter((item) => item.given !== item.correct)
 
-    // Per-question attempt data
     const questionAttempts = questions.map((q, i) => ({
       question_id: q.id,
       answer_given: answers[i],
@@ -200,34 +199,36 @@ export default function QuizClient({
     router.push(`/quiz/results?${params}`)
   }
 
-  return (
-    <div className="min-h-screen bg-gray-50 px-4 py-8">
-      <div className="max-w-2xl mx-auto space-y-6">
+  const progressPct = ((current + 1) / questions.length) * 100
+  const timeWarning = timeLimit && (timeLimit - elapsed) < 300
 
-        {/* Progress bar + meta */}
-        <div className="flex items-center justify-between text-sm text-gray-500">
-          <span>{mockMode ? 'Mock Exam' : `${q.topic} — ${q.subtopic}`}</span>
-          <div className="flex items-center gap-4">
-            {timeLimit ? (
-              <span className={`tabular-nums font-medium ${timeLimit - elapsed < 300 ? 'text-red-500' : 'text-gray-400'}`}>
-                {formatTime(timeLimit - elapsed)} left
-              </span>
-            ) : (
-              <span className="tabular-nums text-gray-400">{formatTime(elapsed)}</span>
-            )}
-            <span>{current + 1} / {questions.length}</span>
+  return (
+    <div className="min-h-screen px-4 py-6" style={{ background: 'var(--bg)' }}>
+      <div className="max-w-xl mx-auto space-y-5">
+
+        {/* Progress */}
+        <div className="space-y-2">
+          <div className="flex items-center justify-between text-xs" style={{ color: 'var(--text-tertiary)' }}>
+            <span>{mockMode ? 'Mock Exam' : `${q.subtopic}`}</span>
+            <div className="flex items-center gap-3">
+              {timeLimit ? (
+                <span className={`tabular-nums font-semibold ${timeWarning ? 'text-[#c45c5c]' : ''}`}>
+                  {formatTime(timeLimit - elapsed)} left
+                </span>
+              ) : (
+                <span className="tabular-nums">{formatTime(elapsed)}</span>
+              )}
+              <span>{current + 1} / {questions.length}</span>
+            </div>
           </div>
-        </div>
-        <div className="w-full bg-gray-200 rounded-full h-1.5">
-          <div
-            className="bg-blue-500 h-1.5 rounded-full transition-all"
-            style={{ width: `${((current + 1) / questions.length) * 100}%` }}
-          />
+          <div className="w-full h-1 rounded-full" style={{ background: 'rgba(255,255,255,0.06)' }}>
+            <div className="h-1 rounded-full transition-all duration-300" style={{ width: `${progressPct}%`, background: 'var(--accent)' }} />
+          </div>
         </div>
 
         {/* Question card */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 space-y-5">
-          <p className="text-gray-800 text-base leading-relaxed">
+        <div className="rounded-2xl p-5 space-y-5" style={{ background: 'var(--bg-card)', boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.06)' }}>
+          <p className="text-base leading-relaxed" style={{ color: 'var(--text-primary)' }}>
             <Latex text={q.question_text} />
           </p>
 
@@ -237,32 +238,33 @@ export default function QuizClient({
                 key={letter}
                 onClick={() => selectAnswer(letter)}
                 disabled={answer !== null}
-                className={`w-full flex gap-3 text-left p-3 rounded-lg border transition-colors ${optionStyle(letter)}`}
+                className="w-full flex gap-3 text-left px-4 py-3 rounded-xl transition-colors disabled:cursor-default"
+                style={optionStyle(letter)}
               >
-                <span className="font-semibold text-sm w-5 shrink-0 text-gray-500 mt-0.5">{letter}</span>
-                <span className="text-gray-800 text-sm leading-relaxed">
+                <span className="font-semibold text-sm w-5 shrink-0 mt-0.5" style={{ color: 'var(--text-tertiary)' }}>{letter}</span>
+                <span className="text-sm leading-relaxed" style={{ color: 'var(--text-primary)' }}>
                   <Latex text={optionText(letter)} />
                 </span>
               </button>
             ))}
           </div>
 
-          {/* Confidence rating — shown after answer selected, before reveal */}
+          {/* Confidence */}
           {answer !== null && !isRevealed && (
-            <div className="pt-1 space-y-2">
-              <p className="text-sm font-medium text-gray-600">How confident are you?</p>
+            <div className="space-y-2 pt-1">
+              <p className="text-sm font-medium" style={{ color: 'var(--text-secondary)' }}>How confident are you?</p>
               <div className="flex gap-2">
                 {(['low', 'medium', 'high'] as Confidence[]).map((level) => (
                   <button
                     key={level}
                     onClick={() => selectConfidence(level)}
-                    className={`flex-1 py-2 rounded-lg text-sm font-medium border transition-colors ${
-                      level === 'low'
-                        ? 'border-red-200 text-red-600 hover:bg-red-50'
-                        : level === 'medium'
-                        ? 'border-amber-200 text-amber-600 hover:bg-amber-50'
-                        : 'border-green-200 text-green-600 hover:bg-green-50'
-                    }`}
+                    className="flex-1 py-2.5 rounded-xl text-sm font-medium transition-colors"
+                    style={level === 'low'
+                      ? { border: '1px solid rgba(196,92,92,0.3)', color: '#c45c5c' }
+                      : level === 'medium'
+                      ? { border: '1px solid rgba(224,170,95,0.3)', color: '#e0aa5f' }
+                      : { border: '1px solid rgba(92,184,138,0.3)', color: '#5cb88a' }
+                    }
                   >
                     {level.charAt(0).toUpperCase() + level.slice(1)}
                   </button>
@@ -273,18 +275,19 @@ export default function QuizClient({
 
           {/* Answer reveal */}
           {isRevealed && (
-            <div>
-              <div className={`text-sm font-medium mb-2 ${answer === q.correct_answer ? 'text-green-600' : 'text-red-600'}`}>
-                {answer === q.correct_answer ? 'Correct!' : `Incorrect — the answer is ${q.correct_answer}`}
-              </div>
+            <div className="space-y-2 pt-1">
+              <p className="text-sm font-semibold" style={{ color: answer === q.correct_answer ? '#5cb88a' : '#c45c5c' }}>
+                {answer === q.correct_answer ? '✓ Correct!' : `✗ Incorrect — answer is ${q.correct_answer}`}
+              </p>
               <button
                 onClick={() => setShowExplanation(!showExplanation)}
-                className="text-xs text-blue-600 hover:underline"
+                className="text-xs font-medium transition-opacity hover:opacity-70"
+                style={{ color: 'var(--accent)' }}
               >
                 {showExplanation ? 'Hide explanation' : 'Show explanation'}
               </button>
               {showExplanation && (
-                <div className="mt-2 p-3 bg-blue-50 rounded-lg text-sm text-gray-700 leading-relaxed">
+                <div className="p-4 rounded-xl text-sm leading-relaxed" style={{ background: 'rgba(255,255,255,0.04)', color: 'var(--text-secondary)' }}>
                   <Latex text={q.explanation} />
                 </div>
               )}
@@ -292,13 +295,14 @@ export default function QuizClient({
           )}
         </div>
 
-        {/* Navigation */}
+        {/* Next / Finish */}
         {isRevealed && (
-          <div className="flex gap-3">
+          <div>
             {!isLast ? (
               <button
                 onClick={goToNext}
-                className="flex-1 bg-blue-600 text-white py-3 rounded-lg font-medium hover:bg-blue-700 transition-colors"
+                className="w-full py-3.5 rounded-xl font-semibold text-sm transition-opacity hover:opacity-90"
+                style={{ background: 'var(--text-primary)', color: 'var(--bg)' }}
               >
                 Next question
               </button>
@@ -306,7 +310,8 @@ export default function QuizClient({
               <button
                 onClick={finish}
                 disabled={submitting}
-                className="flex-1 bg-green-600 text-white py-3 rounded-lg font-medium hover:bg-green-700 disabled:opacity-50 transition-colors"
+                className="w-full py-3.5 rounded-xl font-semibold text-sm transition-opacity disabled:opacity-40"
+                style={{ background: '#5cb88a', color: '#fff' }}
               >
                 {submitting ? 'Saving...' : 'See results'}
               </button>
