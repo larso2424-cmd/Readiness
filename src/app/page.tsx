@@ -79,7 +79,8 @@ export default async function Home() {
     supabase.from('exams').select('id, name, exam_date, target_grade, archived, course').eq('user_id', user.id).eq('archived', false).order('exam_date', { ascending: true, nullsFirst: false }),
   ])
 
-  const userPlan = getActivePlan(userData?.plan ?? 'free', userData?.plan_expires_at ?? null)
+  const isOwner = user.email === process.env.UNLIMITED_EMAIL
+  const userPlan = isOwner ? 'study_plan' : getActivePlan(userData?.plan ?? 'free', userData?.plan_expires_at ?? null)
 
   const allExams = examsData ?? []
 
