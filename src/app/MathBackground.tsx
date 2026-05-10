@@ -6,7 +6,26 @@ const SYMBOLS = [
   'π', '∫', '√', 'Σ', 'θ', 'Δ', '∞', 'log', 'sin', 'cos',
   'x²', 'f(x)', 'dy/dx', 'e', 'ln', '±', 'tan', 'lim', 'P(A)',
   '7', '42', '3.14', 'n!', 'μ', 'σ', 'r²', 'ax²+bx+c',
+  '∂', 'λ', 'α', 'β', 'φ', 'ω', 'ε', 'ζ',
+  'cos²x', 'sinθ', 'log₂', 'e^x', 'x³', '∇', '∈', '⊂',
+  '0.5', '2π', '√2', 'n²', 'x̄', "f'(x)", '∑n', 'P(B|A)',
+  '1', '2', '3', '5', '8', '13', '21', '0',
+  '÷', '×', '=', '%', '∝', '≈', '≠', '≤',
+  'i²', 'a+bi', 'r·θ', 'IQR', 'E(X)', 'Var(X)',
+  // repeat popular ones to fill grid
+  'π', '∫', 'sin', 'cos', 'tan', 'ln', 'log', 'e',
+  '∞', 'Σ', 'θ', 'Δ', '√', 'x²', 'lim', '±',
+  '1', '2', '3', '4', '5', '6', '7', '8', '9', '0',
+  'α', 'β', 'λ', 'μ', 'σ', 'φ', 'ω', 'γ',
+  'dy/dx', 'f(x)', 'n!', '3.14', '42', '2π', '√3',
+  'P(A)', 'P(B)', 'E(X)', 'r²', 'x³', 'e^x', 'log₁₀',
+  '≥', '≤', '≠', '≈', '∈', '∉', '⊆', '∩', '∪',
+  'sin²x', 'cos²x', 'tanθ', 'arcsin', 'cot', 'sec',
+  'ax+b', 'mx+c', 'y=mx', 'f\'\'(x)', '∑k', 'nCr',
+  '0.25', '0.75', '1/2', '2/3', '1/4', '3.14',
 ]
+
+const TOTAL = 180
 
 export default function MathBackground() {
   const containerRef = useRef<HTMLDivElement>(null)
@@ -17,12 +36,24 @@ export default function MathBackground() {
 
     const items: { el: HTMLSpanElement; x: number; y: number; vx: number; vy: number }[] = []
 
-    SYMBOLS.forEach((sym, i) => {
+    // Build a list of TOTAL symbols by cycling through SYMBOLS
+    const pool: string[] = []
+    for (let i = 0; i < TOTAL; i++) pool.push(SYMBOLS[i % SYMBOLS.length])
+    // Shuffle
+    pool.sort(() => Math.random() - 0.5)
+
+    // Grid: find cols/rows that fit TOTAL symbols as evenly as possible
+    const COLS = 13
+    const ROWS = Math.ceil(TOTAL / COLS)
+    const cellW = 100 / COLS
+    const cellH = 100 / ROWS
+
+    pool.forEach((sym, i) => {
       const el = document.createElement('span')
       el.textContent = sym
       el.style.cssText = `
         position: absolute;
-        font-size: ${Math.random() * 12 + 13}px;
+        font-size: ${Math.random() * 10 + 11}px;
         font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
         color: rgba(255,255,255,${Math.random() * 0.08 + 0.12});
         pointer-events: none;
@@ -31,8 +62,10 @@ export default function MathBackground() {
         font-weight: 500;
         letter-spacing: 0.02em;
       `
-      const x = Math.random() * 100
-      const y = Math.random() * 100
+      const col = i % COLS
+      const row = Math.floor(i / COLS)
+      const x = col * cellW + Math.random() * cellW * 0.8 + cellW * 0.1
+      const y = row * cellH + Math.random() * cellH * 0.8 + cellH * 0.1
       el.style.left = `${x}%`
       el.style.top = `${y}%`
       container.appendChild(el)
@@ -41,8 +74,8 @@ export default function MathBackground() {
         el,
         x,
         y,
-        vx: (Math.random() - 0.5) * 0.015,
-        vy: (Math.random() - 0.5) * 0.015,
+        vx: (Math.random() - 0.5) * 0.012,
+        vy: (Math.random() - 0.5) * 0.012,
       })
     })
 
