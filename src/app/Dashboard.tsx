@@ -233,6 +233,23 @@ export default function Dashboard({
                 {streak}d
               </div>
             )}
+            {/* Plan badge */}
+            {pro ? (
+              <div className="flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-semibold" style={{
+                background: 'rgba(92,184,138,0.1)',
+                color: '#5cb88a',
+              }}>
+                <span className="w-1.5 h-1.5 rounded-full bg-[#5cb88a]" />
+                {userPlan === 'study_plan' ? 'Study Plan' : 'Exam Mode'}
+              </div>
+            ) : (
+              <Link href="/upgrade" className="flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-semibold transition-opacity hover:opacity-80" style={{
+                background: 'var(--accent-muted)',
+                color: 'var(--accent)',
+              }}>
+                Upgrade
+              </Link>
+            )}
             <ExamSwitcher activeExam={activeExam} allExams={allExams} onSwitch={switchExam} onSignOut={signOut} name={name} />
           </div>
         </div>
