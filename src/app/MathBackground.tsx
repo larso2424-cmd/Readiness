@@ -25,7 +25,7 @@ const SYMBOLS = [
   '0.25', '0.75', '1/2', '2/3', '1/4', '3.14',
 ]
 
-const TOTAL = 180
+const TOTAL = 90
 
 export default function MathBackground() {
   const containerRef = useRef<HTMLDivElement>(null)
