@@ -2,6 +2,7 @@ import { createClient as createServiceClient } from '@supabase/supabase-js'
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import QuizClient from '../take/QuizClient'
+import { getActivePlan } from '@/lib/plans'
 
 const supabase = createServiceClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -14,6 +15,13 @@ export default async function MockExamPage() {
   const userClient = await createClient()
   const { data: { user } } = await userClient.auth.getUser()
   if (!user) redirect('/auth/login')
+
+  // Pro gate — mock exam is a pro feature
+  const { data: userData } = await supabase.from('users').select('plan, plan_expires_at').eq('id', user.id).single()
+  const isOwner = user.email === process.env.UNLIMITED_EMAIL
+  const userPlan = isOwner ? 'study_plan' : getActivePlan(userData?.plan ?? 'free', userData?.plan_expires_at ?? null)
+  const pro = isOwner || userPlan === 'exam_mode' || userPlan === 'study_plan'
+  if (!pro) redirect('/upgrade')
 
   // Fetch all approved questions grouped by subtopic
   const { data: allQuestions } = await supabase

@@ -26,7 +26,8 @@ export default async function QuizPage() {
       .eq('id', user.id)
       .single()
 
-    userPlan = getActivePlan(userData?.plan ?? 'free', userData?.plan_expires_at ?? null)
+    const isOwner = user.email === process.env.UNLIMITED_EMAIL
+    userPlan = isOwner ? 'study_plan' : getActivePlan(userData?.plan ?? 'free', userData?.plan_expires_at ?? null)
 
     // Count quizzes today
     const today = new Date()
