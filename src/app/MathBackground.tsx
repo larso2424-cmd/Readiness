@@ -17,7 +17,7 @@ const SYMBOLS = [
   '1', '2', '3', '4', '5', '6', '7', '8', '9', '0',
 ]
 
-const TOTAL = 90
+const TOTAL = 50
 
 export default function MathBackground() {
   const containerRef = useRef<HTMLDivElement>(null)
@@ -32,8 +32,8 @@ export default function MathBackground() {
     for (let i = 0; i < TOTAL; i++) pool.push(SYMBOLS[i % SYMBOLS.length])
     pool.sort(() => Math.random() - 0.5)
 
-    // Grid-based placement for even distribution
-    const COLS = 10
+    // Grid-based placement — 5 cols keeps symbols well spaced on mobile too
+    const COLS = 5
     const ROWS = Math.ceil(TOTAL / COLS)
     const cellW = 100 / COLS
     const cellH = 100 / ROWS
@@ -43,7 +43,7 @@ export default function MathBackground() {
       el.textContent = sym
       el.style.cssText = `
         position: absolute;
-        font-size: ${Math.random() * 10 + 11}px;
+        font-size: ${Math.random() * 8 + 12}px;
         font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
         color: rgba(255,255,255,${Math.random() * 0.08 + 0.12});
         pointer-events: none;
