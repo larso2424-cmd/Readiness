@@ -70,6 +70,9 @@ export default async function Home() {
               Sign in
             </Link>
           </div>
+          <p className="text-xs" style={{ color: 'var(--text-tertiary)' }}>
+            <Link href="/privacy" className="underline hover:opacity-70 transition-opacity">Privacy Policy</Link>
+          </p>
         </div>
       </main>
     )
