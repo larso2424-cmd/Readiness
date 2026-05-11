@@ -73,6 +73,7 @@ export default async function Home() {
           <div className="flex gap-4 justify-center text-xs" style={{ color: 'var(--text-tertiary)' }}>
             <Link href="/privacy" className="underline hover:opacity-70 transition-opacity">Privacy Policy</Link>
             <Link href="/cookies" className="underline hover:opacity-70 transition-opacity">Cookie Policy</Link>
+            <Link href="/terms" className="underline hover:opacity-70 transition-opacity">Terms of Use</Link>
           </div>
         </div>
       </main>
