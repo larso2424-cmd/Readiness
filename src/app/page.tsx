@@ -70,6 +70,12 @@ export default async function Home() {
               Sign in
             </Link>
           </div>
+          <p className="text-xs text-center" style={{ color: 'var(--text-tertiary)' }}>
+            By signing up you agree to our{' '}
+            <Link href="/terms" className="underline hover:opacity-70 transition-opacity">Terms of Use</Link>
+            {' '}and{' '}
+            <Link href="/privacy" className="underline hover:opacity-70 transition-opacity">Privacy Policy</Link>
+          </p>
           <div className="flex gap-4 justify-center text-xs" style={{ color: 'var(--text-tertiary)' }}>
             <Link href="/privacy" className="underline hover:opacity-70 transition-opacity">Privacy Policy</Link>
             <Link href="/cookies" className="underline hover:opacity-70 transition-opacity">Cookie Policy</Link>
