@@ -89,12 +89,15 @@ export default function UpgradePage() {
             border: '1px solid var(--border)',
           }}>
             <div>
-              <p className="text-xs font-semibold uppercase tracking-widest" style={{ color: 'var(--text-tertiary)' }}>Study Plan</p>
+              <div className="flex items-center justify-between">
+                <p className="text-xs font-semibold uppercase tracking-widest" style={{ color: 'var(--text-tertiary)' }}>Study Plan</p>
+                <span className="text-xs font-semibold px-2 py-0.5 rounded-full" style={{ background: 'rgba(92,184,138,0.12)', color: '#5cb88a' }}>2-day free trial</span>
+              </div>
               <div className="flex items-baseline gap-1 mt-1">
                 <p className="text-3xl font-bold" style={{ color: 'var(--text-primary)' }}>€7.99</p>
                 <span className="text-sm" style={{ color: 'var(--text-tertiary)' }}>/month</span>
               </div>
-              <p className="text-xs mt-0.5" style={{ color: 'var(--text-secondary)' }}>Cancel anytime</p>
+              <p className="text-xs mt-0.5" style={{ color: 'var(--text-secondary)' }}>Cancel anytime · free for 2 days</p>
             </div>
 
             <ul className="space-y-2 text-sm" style={{ color: 'var(--text-secondary)' }}>
@@ -119,7 +122,7 @@ export default function UpgradePage() {
                 color: 'var(--text-secondary)',
               }}
             >
-              {loading === 'study_plan' ? 'Loading...' : 'Get Study Plan'}
+              {loading === 'study_plan' ? 'Loading...' : 'Start free trial'}
             </button>
           </div>
 

@@ -39,6 +39,9 @@ export async function POST(req: NextRequest) {
     payment_method_types: ['card'],
     line_items: [{ price: priceId, quantity: 1 }],
     mode: priceType === 'study_plan' ? 'subscription' : 'payment',
+    ...(priceType === 'study_plan' && {
+      subscription_data: { trial_period_days: 2 },
+    }),
     success_url: `${origin}/?upgraded=true`,
     cancel_url: `${origin}/upgrade`,
     metadata: { supabase_user_id: user.id, plan: priceType },
