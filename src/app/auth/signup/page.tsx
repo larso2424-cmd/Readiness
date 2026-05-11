@@ -92,6 +92,13 @@ function SignupForm() {
           >
             {loading ? 'Creating account...' : 'Create account'}
           </button>
+
+          <p className="text-xs text-center" style={{ color: 'var(--text-tertiary)' }}>
+            By creating an account you agree to our{' '}
+            <Link href="/terms" className="underline hover:opacity-70 transition-opacity">Terms of Use</Link>
+            {' '}and{' '}
+            <Link href="/privacy" className="underline hover:opacity-70 transition-opacity">Privacy Policy</Link>
+          </p>
         </form>
 
         <p className="text-sm text-center" style={{ color: 'var(--text-secondary)' }}>
