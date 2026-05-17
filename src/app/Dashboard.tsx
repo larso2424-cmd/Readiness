@@ -106,10 +106,22 @@ function ReadinessRing({ score }: { score: number }) {
   )
 }
 
-function ExamSwitcher({ activeExam, allExams, onSwitch, onSignOut, name }: {
-  activeExam: Exam; allExams: Exam[]; onSwitch: (id: string) => void; onSignOut: () => void; name: string
+function ExamSwitcher({ activeExam, allExams, onSwitch, onSignOut, name, userPlan }: {
+  activeExam: Exam; allExams: Exam[]; onSwitch: (id: string) => void; onSignOut: () => void; name: string; userPlan: string
 }) {
   const [open, setOpen] = useState(false)
+  const [cancelling, setCancelling] = useState(false)
+
+  async function cancelSubscription() {
+    if (!confirm('Are you sure you want to cancel? You\'ll keep access until the end of your billing period.')) return
+    setCancelling(true)
+    setOpen(false)
+    const res = await fetch('/api/stripe/cancel', { method: 'POST' })
+    const { error } = await res.json()
+    setCancelling(false)
+    if (error) { alert(error); return }
+    alert('Your subscription has been cancelled. You\'ll keep access until the end of your billing period.')
+  }
 
   return (
     <div className="relative">
@@ -162,6 +174,16 @@ function ExamSwitcher({ activeExam, allExams, onSwitch, onSignOut, name }: {
               <button onClick={() => { setOpen(false); onSignOut() }} className="w-full text-left px-2.5 py-2 rounded-lg hover:bg-white/5 transition-colors text-sm text-[var(--text-tertiary)]">
                 Sign out
               </button>
+              {userPlan === 'study_plan' && (
+                <button
+                  onClick={cancelSubscription}
+                  disabled={cancelling}
+                  className="w-full text-left px-2.5 py-2 rounded-lg hover:bg-white/5 transition-colors text-sm disabled:opacity-50"
+                  style={{ color: '#c45c5c' }}
+                >
+                  {cancelling ? 'Cancelling...' : 'Cancel subscription'}
+                </button>
+              )}
             </div>
           </div>
         </>
@@ -243,7 +265,7 @@ export default function Dashboard({
           {/* Bottom row: greeting + exam switcher */}
           <div className="flex items-center justify-between">
             <h1 className="text-xl font-semibold text-[var(--text-primary)]">{greeting}, {name}</h1>
-            <ExamSwitcher activeExam={activeExam} allExams={allExams} onSwitch={switchExam} onSignOut={signOut} name={name} />
+            <ExamSwitcher activeExam={activeExam} allExams={allExams} onSwitch={switchExam} onSignOut={signOut} name={name} userPlan={userPlan} />
           </div>
         </div>
 
