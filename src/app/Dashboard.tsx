@@ -369,12 +369,41 @@ export default function Dashboard({
             </div>
           </div>
         ) : (
-          <div className="rounded-2xl p-8 text-center fade-up fade-up-3 space-y-2" style={{
+          <div className="rounded-2xl p-6 fade-up fade-up-3" style={{
             background: 'var(--bg-card)',
-            boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.05)',
+            boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.07)',
           }}>
-            <p className="font-medium" style={{ color: 'var(--text-primary)' }}>No data yet</p>
-            <p className="text-sm" style={{ color: '#7a8394' }}>Take your first quiz to see your readiness score</p>
+            <div className="flex items-start gap-4">
+              <div className="w-12 h-12 rounded-xl shrink-0 flex items-center justify-center text-xl"
+                style={{ background: 'var(--accent-muted)' }}>
+                🎯
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="font-semibold text-base" style={{ color: 'var(--text-primary)' }}>Find out where you stand</p>
+                <p className="text-sm mt-1 leading-relaxed" style={{ color: '#7a8394' }}>
+                  Take a 2-minute quiz and instantly see your readiness score, weak spots, and exactly what to study.
+                </p>
+                <Link
+                  href="/quiz/random"
+                  className="inline-flex items-center gap-2 mt-4 px-4 py-2.5 rounded-xl text-sm font-semibold transition-opacity hover:opacity-90"
+                  style={{ background: 'var(--accent)', color: '#fff' }}
+                >
+                  Start your first quiz →
+                </Link>
+              </div>
+            </div>
+            <div className="mt-5 pt-4 grid grid-cols-3 gap-3" style={{ borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+              {[
+                { icon: '📊', label: 'Readiness score' },
+                { icon: '🔍', label: 'Weak topics' },
+                { icon: '📚', label: 'What to study' },
+              ].map(({ icon, label }) => (
+                <div key={label} className="text-center space-y-1">
+                  <span className="text-lg">{icon}</span>
+                  <p className="text-[11px] font-medium" style={{ color: '#7a8394' }}>{label}</p>
+                </div>
+              ))}
+            </div>
           </div>
         )}
 
@@ -568,16 +597,15 @@ export default function Dashboard({
         )}
 
         {recentAttempts.length === 0 && overallScore === null && (
-          <div className="rounded-2xl p-10 text-center space-y-4 fade-up fade-up-3" style={{
-            background: 'var(--bg-card)',
-            boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.05)',
+          <div className="rounded-2xl px-5 py-4 flex items-center justify-between fade-up fade-up-5" style={{
+            background: 'rgba(255,255,255,0.02)',
+            boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.04)',
           }}>
-            <p className="font-medium" style={{ color: 'var(--text-secondary)' }}>{t.readyWhenYouAre}</p>
-            <p className="text-sm" style={{ color: '#7a8394' }}>{t.takeFirstQuiz}</p>
-            <Link href="/quiz"
-              className="inline-block mt-2 text-sm font-medium px-5 py-2.5 rounded-xl transition-colors"
+            <p className="text-sm" style={{ color: '#7a8394' }}>Takes about 2 minutes · no signup needed</p>
+            <Link href="/quiz/random"
+              className="text-sm font-semibold px-4 py-2 rounded-xl transition-opacity hover:opacity-80 shrink-0 ml-4"
               style={{ background: 'var(--accent)', color: 'white' }}>
-              {t.startAQuiz}
+              Start now →
             </Link>
           </div>
         )}
