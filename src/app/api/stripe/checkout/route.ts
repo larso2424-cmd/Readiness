@@ -19,10 +19,10 @@ export async function POST(req: NextRequest) {
   }
 
   const priceId = priceType === 'exam_mode' ? EXAM_MODE_PRICE_ID : STUDY_PLAN_PRICE_ID
-  const origin = req.headers.get('origin') ?? 'https://readiness-al3yup616-larso2424-7445s-projects.vercel.app'
+  const origin = req.headers.get('origin') ?? 'https://www.studyready.org'
 
   // Get or create Stripe customer
-  const { data: userData } = await supabase.from('users').select('stripe_customer_id').eq('id', user.id).single()
+  const { data: userData } = await supabase.from('users').select('stripe_customer_id, plan, plan_expires_at').eq('id', user.id).single()
   let customerId = userData?.stripe_customer_id
 
   if (!customerId) {
@@ -32,6 +32,14 @@ export async function POST(req: NextRequest) {
     })
     customerId = customer.id
     await supabase.from('users').update({ stripe_customer_id: customerId }).eq('id', user.id)
+  }
+
+  // Block duplicate subscriptions — if user already has an active subscription, don't create another
+  if (priceType === 'study_plan' && customerId) {
+    const existing = await stripe.subscriptions.list({ customer: customerId, status: 'active', limit: 1 })
+    if (existing.data.length > 0) {
+      return NextResponse.json({ error: 'You already have an active subscription.' }, { status: 400 })
+    }
   }
 
   const session = await stripe.checkout.sessions.create({

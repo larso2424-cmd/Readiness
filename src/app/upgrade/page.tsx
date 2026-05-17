@@ -7,6 +7,7 @@ export default function UpgradePage() {
   const [loading, setLoading] = useState<string | null>(null)
 
   async function checkout(priceType: 'exam_mode' | 'study_plan') {
+    if (loading) return
     setLoading(priceType)
     const res = await fetch('/api/stripe/checkout', {
       method: 'POST',
