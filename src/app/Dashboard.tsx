@@ -1,10 +1,11 @@
 'use client'
 
 import Link from 'next/link'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { isPro } from '@/lib/plans'
+import { getLang, getTranslations } from '@/lib/i18n'
 
 interface Exam {
   id: string
@@ -208,8 +209,14 @@ export default function Dashboard({
 }: Props) {
   const router = useRouter()
   const pro = isPro(userPlan as any, null)
+  const [t, setT] = useState(() => getTranslations('en'))
+
+  useEffect(() => {
+    setT(getTranslations(getLang()))
+  }, [])
+
   // Compute greeting and date client-side so they use the user's local timezone
-  const greeting = getLocalGreeting()
+  const greeting = t.hello
   const date = getLocalDate()
 
   async function signOut() {
@@ -262,10 +269,17 @@ export default function Dashboard({
               )}
             </div>
           </div>
-          {/* Bottom row: greeting + exam switcher */}
+          {/* Bottom row: greeting + exam switcher + settings */}
           <div className="flex items-center justify-between">
             <h1 className="text-xl font-semibold text-[var(--text-primary)]">{greeting}, {name}</h1>
-            <ExamSwitcher activeExam={activeExam} allExams={allExams} onSwitch={switchExam} onSignOut={signOut} name={name} userPlan={userPlan} />
+            <div className="flex items-center gap-1">
+              <Link href="/settings" className="p-1.5 rounded-lg hover:bg-white/5 transition-colors" style={{ color: 'var(--text-tertiary)' }} title="Settings">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+                </svg>
+              </Link>
+              <ExamSwitcher activeExam={activeExam} allExams={allExams} onSwitch={switchExam} onSignOut={signOut} name={name} userPlan={userPlan} />
+            </div>
           </div>
         </div>
 
@@ -369,32 +383,32 @@ export default function Dashboard({
           background: 'var(--bg-card)',
           boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.05)',
         }}>
-          <p className="text-[11px] font-medium uppercase tracking-wider mb-4" style={{ color: '#7a8394' }}>Practice</p>
+          <p className="text-[11px] font-medium uppercase tracking-wider mb-4" style={{ color: '#7a8394' }}>{t.practice}</p>
           <div className="grid grid-cols-2 gap-3">
             {weakIds.length > 0 && (
               <Link href={`/quiz/take?subtopics=${weakIds.join(',')}`}
                 className="rounded-xl p-5 transition-colors group"
                 style={{ background: 'rgba(255,255,255,0.035)', boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.06)' }}>
-                <p className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>Weak topics</p>
+                <p className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>{t.weakTopics}</p>
                 <p className="text-xs mt-1.5 leading-relaxed" style={{ color: '#7a8394' }}>{weakSubtopicNames.slice(0, 2).join(', ')}</p>
               </Link>
             )}
             <Link href="/quiz"
               className="rounded-xl p-5 transition-colors"
               style={{ background: 'rgba(255,255,255,0.035)', boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.06)' }}>
-              <p className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>By topic</p>
+              <p className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>{t.byTopic}</p>
               <p className="text-xs mt-1.5" style={{ color: '#7a8394' }}>Choose subtopics</p>
             </Link>
             <Link href="/quiz/random"
               className="rounded-xl p-5 transition-colors"
               style={{ background: 'rgba(255,255,255,0.035)', boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.06)' }}>
-              <p className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>Random mix</p>
+              <p className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>{t.randomMix}</p>
               <p className="text-xs mt-1.5" style={{ color: '#7a8394' }}>All exam topics</p>
             </Link>
             <Link href="/quiz/mock"
               className="rounded-xl p-5 transition-colors"
               style={{ background: 'rgba(255,255,255,0.035)', boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.06)' }}>
-              <p className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>Mock exam</p>
+              <p className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>{t.mockExam}</p>
               <p className="text-xs mt-1.5" style={{ color: '#7a8394' }}>60 min · timed</p>
             </Link>
           </div>
@@ -406,7 +420,7 @@ export default function Dashboard({
             background: 'var(--bg-card)',
             boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.05)',
           }}>
-            <p className="text-[11px] font-medium uppercase tracking-wider mb-4" style={{ color: '#7a8394' }}>Last session</p>
+            <p className="text-[11px] font-medium uppercase tracking-wider mb-4" style={{ color: '#7a8394' }}>{t.lastSession}</p>
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-4">
                 <div className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold shrink-0"
@@ -437,7 +451,7 @@ export default function Dashboard({
           background: 'var(--bg-card)',
           boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.05)',
         }}>
-          <p className="text-[11px] font-medium uppercase tracking-wider" style={{ color: '#7a8394' }}>Topic mastery</p>
+          <p className="text-[11px] font-medium uppercase tracking-wider" style={{ color: '#7a8394' }}>{t.topicMastery}</p>
           <div className="space-y-3.5">
             {examTopics.map((topic) => {
               const entry = topicMastery.find((t) => t.topic === topic)
@@ -471,7 +485,7 @@ export default function Dashboard({
             background: 'var(--bg-card)',
             boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.05)',
           }}>
-            <p className="text-[11px] font-medium uppercase tracking-wider" style={{ color: '#7a8394' }}>Skill patterns</p>
+            <p className="text-[11px] font-medium uppercase tracking-wider" style={{ color: '#7a8394' }}>{t.skillPatterns}</p>
             {masteredSkills.length > 0 && (
               <div className="space-y-2">
                 <p className="text-xs font-medium" style={{ color: '#5cb88a' }}>Mastered</p>
@@ -489,7 +503,7 @@ export default function Dashboard({
             )}
             {strugglingSkills.length > 0 && (
               <div className="space-y-2">
-                <p className="text-xs font-medium" style={{ color: 'var(--accent)' }}>Needs work</p>
+                <p className="text-xs font-medium" style={{ color: 'var(--accent)' }}>{t.needsWork}</p>
                 <div className="flex flex-wrap gap-1.5">
                   {strugglingSkills.map((skill) => (
                     <span key={skill} className="text-[11px] font-medium px-2.5 py-0.5 rounded-md" style={{
@@ -535,7 +549,7 @@ export default function Dashboard({
             background: 'var(--bg-card)',
             boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.05)',
           }}>
-            <p className="text-[11px] font-medium uppercase tracking-wider" style={{ color: '#7a8394' }}>Recent activity</p>
+            <p className="text-[11px] font-medium uppercase tracking-wider" style={{ color: '#7a8394' }}>{t.recentActivity}</p>
             <div className="space-y-2">
               {recentAttempts.map((attempt) => (
                 <div key={attempt.id} className="flex items-center justify-between py-1.5" style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
@@ -558,12 +572,12 @@ export default function Dashboard({
             background: 'var(--bg-card)',
             boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.05)',
           }}>
-            <p className="font-medium" style={{ color: 'var(--text-secondary)' }}>Ready when you are</p>
-            <p className="text-sm" style={{ color: '#7a8394' }}>Take your first quiz to start tracking your readiness</p>
+            <p className="font-medium" style={{ color: 'var(--text-secondary)' }}>{t.readyWhenYouAre}</p>
+            <p className="text-sm" style={{ color: '#7a8394' }}>{t.takeFirstQuiz}</p>
             <Link href="/quiz"
               className="inline-block mt-2 text-sm font-medium px-5 py-2.5 rounded-xl transition-colors"
               style={{ background: 'var(--accent)', color: 'white' }}>
-              Start a quiz
+              {t.startAQuiz}
             </Link>
           </div>
         )}
