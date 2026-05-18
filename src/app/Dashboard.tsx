@@ -1,11 +1,11 @@
 'use client'
 
 import Link from 'next/link'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { isPro } from '@/lib/plans'
-import { getLang, getTranslations } from '@/lib/i18n'
+import { getTranslations, type LangCode } from '@/lib/i18n'
 
 interface Exam {
   id: string
@@ -17,6 +17,7 @@ interface Exam {
 }
 
 interface Props {
+  lang?: LangCode
   name: string
   greeting: string
   date: string
@@ -50,12 +51,12 @@ function scoreColor(score: number): string {
   return '#c45c5c'
 }
 
-function scoreLabel(score: number): string {
-  if (score >= 85) return 'Well prepared'
-  if (score >= 70) return 'On track'
-  if (score >= 50) return 'Getting there'
-  if (score >= 30) return 'Needs focus'
-  return 'At risk'
+function scoreLabel(score: number, t: Record<string, string>): string {
+  if (score >= 85) return t.wellPrepared
+  if (score >= 70) return t.onTrack
+  if (score >= 50) return t.gettingThere
+  if (score >= 30) return t.needsFocus
+  return t.atRisk
 }
 
 function formatDate(iso: string): string {
@@ -66,14 +67,14 @@ function formatSkillTag(tag: string): string {
   return tag.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())
 }
 
-function daysLabel(days: number | null): string {
+function daysLabel(days: number | null, t: Record<string, string>): string {
   if (days === null) return ''
-  if (days < 0) return 'Exam passed'
-  if (days === 0) return 'Today'
-  if (days === 1) return 'Tomorrow'
-  if (days < 14) return `${days} days left`
-  if (days < 60) return `${Math.round(days / 7)} weeks left`
-  return `${Math.round(days / 30)} months left`
+  if (days < 0) return t.examPassed
+  if (days === 0) return t.today
+  if (days === 1) return t.tomorrow
+  if (days < 14) return `${days} ${t.daysLeft}`
+  if (days < 60) return `${Math.round(days / 7)} ${t.weeksLeft}`
+  return `${Math.round(days / 30)} ${t.monthsLeft}`
 }
 
 function daysUrgency(days: number | null): string {
@@ -107,21 +108,21 @@ function ReadinessRing({ score }: { score: number }) {
   )
 }
 
-function ExamSwitcher({ activeExam, allExams, onSwitch, onSignOut, name, userPlan }: {
-  activeExam: Exam; allExams: Exam[]; onSwitch: (id: string) => void; onSignOut: () => void; name: string; userPlan: string
+function ExamSwitcher({ activeExam, allExams, onSwitch, onSignOut, name, userPlan, t }: {
+  activeExam: Exam; allExams: Exam[]; onSwitch: (id: string) => void; onSignOut: () => void; name: string; userPlan: string; t: Record<string, string>
 }) {
   const [open, setOpen] = useState(false)
   const [cancelling, setCancelling] = useState(false)
 
   async function cancelSubscription() {
-    if (!confirm('Are you sure you want to cancel? You\'ll keep access until the end of your billing period.')) return
+    if (!confirm(t.cancelConfirm)) return
     setCancelling(true)
     setOpen(false)
     const res = await fetch('/api/stripe/cancel', { method: 'POST' })
     const { error } = await res.json()
     setCancelling(false)
     if (error) { alert(error); return }
-    alert('Your subscription has been cancelled. You\'ll keep access until the end of your billing period.')
+    alert(t.cancelSuccess)
   }
 
   return (
@@ -170,10 +171,10 @@ function ExamSwitcher({ activeExam, allExams, onSwitch, onSignOut, name, userPla
             </div>
             <div className="border-t border-[var(--border)] p-1.5">
               <Link href="/exam/new" onClick={() => setOpen(false)} className="flex items-center gap-2 px-2.5 py-2 rounded-lg hover:bg-white/5 transition-colors text-sm text-[var(--text-secondary)]">
-                + New exam
+                {t.newExam}
               </Link>
               <button onClick={() => { setOpen(false); onSignOut() }} className="w-full text-left px-2.5 py-2 rounded-lg hover:bg-white/5 transition-colors text-sm text-[var(--text-tertiary)]">
-                Sign out
+                {t.signOut}
               </button>
               {userPlan === 'study_plan' && (
                 <button
@@ -182,7 +183,7 @@ function ExamSwitcher({ activeExam, allExams, onSwitch, onSignOut, name, userPla
                   className="w-full text-left px-2.5 py-2 rounded-lg hover:bg-white/5 transition-colors text-sm disabled:opacity-50"
                   style={{ color: '#c45c5c' }}
                 >
-                  {cancelling ? 'Cancelling...' : 'Cancel subscription'}
+                  {cancelling ? '...' : t.cancelSubscription}
                 </button>
               )}
             </div>
@@ -202,18 +203,14 @@ function getLocalDate(): string {
 }
 
 export default function Dashboard({
-  name, greeting: _greeting, date: _date, streak, overallScore, predictedGrade,
+  lang = 'en', name, greeting: _greeting, date: _date, streak, overallScore, predictedGrade,
   topicMastery, examTopics, lastAttempt, recentAttempts,
   weakIds, weakSubtopicNames, skillStats,
   activeExam, allExams, examDaysLeft, userPlan = 'free',
 }: Props) {
   const router = useRouter()
   const pro = isPro(userPlan as any, null)
-  const [t, setT] = useState(() => getTranslations('en'))
-
-  useEffect(() => {
-    setT(getTranslations(getLang()))
-  }, [])
+  const t = getTranslations(lang)
 
   // Compute greeting and date client-side so they use the user's local timezone
   const greeting = t.hello
@@ -264,7 +261,7 @@ export default function Dashboard({
                 </div>
               ) : (
                 <Link href="/upgrade" className="flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-semibold transition-opacity hover:opacity-80" style={{ background: 'var(--accent-muted)', color: 'var(--accent)' }}>
-                  Upgrade
+                  {t.upgrade}
                 </Link>
               )}
             </div>
@@ -278,7 +275,7 @@ export default function Dashboard({
                   <circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
                 </svg>
               </Link>
-              <ExamSwitcher activeExam={activeExam} allExams={allExams} onSwitch={switchExam} onSignOut={signOut} name={name} userPlan={userPlan} />
+              <ExamSwitcher activeExam={activeExam} allExams={allExams} onSwitch={switchExam} onSignOut={signOut} name={name} userPlan={userPlan} t={t} />
             </div>
           </div>
         </div>
@@ -298,7 +295,7 @@ export default function Dashboard({
           <div className="flex items-center gap-3 shrink-0 ml-3">
             {examDaysLeft !== null && examDaysLeft >= 0 && (
               <span className={`text-[11px] font-medium whitespace-nowrap ${daysUrgency(examDaysLeft)}`}>
-                {daysLabel(examDaysLeft)}
+                {daysLabel(examDaysLeft, t)}
               </span>
             )}
           </div>
@@ -315,7 +312,7 @@ export default function Dashboard({
               <div>
                 <p className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>Exam Mode</p>
                 {/* 1. Sharper subtitle */}
-                <p className="text-xs mt-0.5" style={{ color: '#9aa3b0' }}>Unlock all topics, weak topics & study plan — €19.99</p>
+                <p className="text-xs mt-0.5" style={{ color: '#9aa3b0' }}>{t.unlockTopics}</p>
               </div>
               <span className="text-sm font-medium shrink-0 ml-4 group-hover:translate-x-0.5 transition-transform" style={{ color: 'var(--accent)' }}>→</span>
             </div>
@@ -336,17 +333,17 @@ export default function Dashboard({
                 {pro ? (
                   <>
                     <p className="text-lg font-semibold" style={{ color: scoreColor(overallScore) }}>
-                      {scoreLabel(overallScore)}
+                      {scoreLabel(overallScore, t)}
                     </p>
                     {strongest && weakest && (
                       <p className="text-xs mt-1.5 leading-relaxed" style={{ color: '#7a8394' }}>
-                        Strong in {TOPIC_SHORT[strongest.topic] ?? strongest.topic} · Weakest in {TOPIC_SHORT[weakest.topic] ?? weakest.topic}
+                        {t.strongIn} {TOPIC_SHORT[strongest.topic] ?? strongest.topic} · {t.weakestIn} {TOPIC_SHORT[weakest.topic] ?? weakest.topic}
                       </p>
                     )}
                     {predictedGrade && (
                       <div className="mt-3 flex items-center gap-2">
                         <span className="text-xs px-2.5 py-1 rounded-lg font-medium" style={{ background: 'rgba(255,255,255,0.06)', color: 'var(--text-primary)' }}>
-                          Predicted grade {predictedGrade.grade}
+                          {t.predictedGrade} {predictedGrade.grade}
                         </span>
                         {predictedGrade.grade < 7 && (
                           <span className="text-xs" style={{ color: '#7a8394' }}>
@@ -359,9 +356,9 @@ export default function Dashboard({
                 ) : (
                   <>
                     <p className="text-base font-semibold" style={{ color: 'var(--text-primary)' }}>You're not fully ready</p>
-                    <p className="text-xs mt-1.5 leading-relaxed" style={{ color: '#7a8394' }}>Unlock your weak topic breakdown to know exactly what to study</p>
+                    <p className="text-xs mt-1.5 leading-relaxed" style={{ color: '#7a8394' }}>{t.unlockBreakdown}</p>
                     <Link href="/upgrade" className="inline-block mt-3 text-xs font-medium hover:opacity-80 transition-opacity" style={{ color: 'var(--accent)' }}>
-                      See full breakdown →
+                      {t.seeFullBreakdown}
                     </Link>
                   </>
                 )}
@@ -379,24 +376,24 @@ export default function Dashboard({
                 🎯
               </div>
               <div className="flex-1 min-w-0">
-                <p className="font-semibold text-base" style={{ color: 'var(--text-primary)' }}>Find out where you stand</p>
+                <p className="font-semibold text-base" style={{ color: 'var(--text-primary)' }}>{t.findOutWhereYouStand}</p>
                 <p className="text-sm mt-1 leading-relaxed" style={{ color: '#7a8394' }}>
-                  Take a 2-minute quiz and instantly see your readiness score, weak spots, and exactly what to study.
+                  {t.takeFirstQuiz}
                 </p>
                 <Link
                   href="/quiz/random"
                   className="inline-flex items-center gap-2 mt-4 px-4 py-2.5 rounded-xl text-sm font-semibold transition-opacity hover:opacity-90"
                   style={{ background: 'var(--accent)', color: '#fff' }}
                 >
-                  Start your first quiz →
+                  {t.startFirstQuiz}
                 </Link>
               </div>
             </div>
             <div className="mt-5 pt-4 grid grid-cols-3 gap-3" style={{ borderTop: '1px solid rgba(255,255,255,0.05)' }}>
               {[
-                { icon: '📊', label: 'Readiness score' },
-                { icon: '🔍', label: 'Weak topics' },
-                { icon: '📚', label: 'What to study' },
+                { icon: '📊', label: t.readinessScore },
+                { icon: '🔍', label: t.weakTopics },
+                { icon: '📚', label: t.whatToStudy },
               ].map(({ icon, label }) => (
                 <div key={label} className="text-center space-y-1">
                   <span className="text-lg">{icon}</span>
@@ -426,19 +423,19 @@ export default function Dashboard({
               className="rounded-xl p-5 transition-colors"
               style={{ background: 'rgba(255,255,255,0.035)', boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.06)' }}>
               <p className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>{t.byTopic}</p>
-              <p className="text-xs mt-1.5" style={{ color: '#7a8394' }}>Choose subtopics</p>
+              <p className="text-xs mt-1.5" style={{ color: '#7a8394' }}>{t.chooseSubtopics}</p>
             </Link>
             <Link href="/quiz/random"
               className="rounded-xl p-5 transition-colors"
               style={{ background: 'rgba(255,255,255,0.035)', boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.06)' }}>
               <p className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>{t.randomMix}</p>
-              <p className="text-xs mt-1.5" style={{ color: '#7a8394' }}>All exam topics</p>
+              <p className="text-xs mt-1.5" style={{ color: '#7a8394' }}>{t.allExamTopics}</p>
             </Link>
             <Link href="/quiz/mock"
               className="rounded-xl p-5 transition-colors"
               style={{ background: 'rgba(255,255,255,0.035)', boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.06)' }}>
               <p className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>{t.mockExam}</p>
-              <p className="text-xs mt-1.5" style={{ color: '#7a8394' }}>60 min · timed</p>
+              <p className="text-xs mt-1.5" style={{ color: '#7a8394' }}>{t.timedMock}</p>
             </Link>
           </div>
         </div>
@@ -457,7 +454,7 @@ export default function Dashboard({
                   {lastAttempt.readiness_score}%
                 </div>
                 <div>
-                  <p className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>{lastAttempt.correct_count} of {lastAttempt.total_count} correct</p>
+                  <p className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>{lastAttempt.correct_count} {t.of} {lastAttempt.total_count} {t.correct}</p>
                   <p className="text-xs mt-0.5" style={{ color: '#7a8394' }}>{formatDate(lastAttempt.created_at)}</p>
                 </div>
               </div>
@@ -469,7 +466,7 @@ export default function Dashboard({
                   boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.08)',
                 }}
               >
-                {weakIds.length > 0 ? 'Retake weak' : 'New quiz'}
+                {weakIds.length > 0 ? t.retakeWeak : t.newQuiz}
               </Link>
             </div>
           </div>
@@ -493,7 +490,7 @@ export default function Dashboard({
                     {score !== undefined ? (
                       <span className="text-xs font-semibold tabular-nums" style={{ color: scoreColor(score) }}>{score}%</span>
                     ) : (
-                      <span className="text-xs" style={{ color: 'var(--text-tertiary)' }}>No data</span>
+                      <span className="text-xs" style={{ color: 'var(--text-tertiary)' }}>{t.noData}</span>
                     )}
                   </div>
                   <div className="h-1 rounded-full overflow-hidden" style={{ background: 'rgba(255,255,255,0.05)' }}>
@@ -517,7 +514,7 @@ export default function Dashboard({
             <p className="text-[11px] font-medium uppercase tracking-wider" style={{ color: '#7a8394' }}>{t.skillPatterns}</p>
             {masteredSkills.length > 0 && (
               <div className="space-y-2">
-                <p className="text-xs font-medium" style={{ color: '#5cb88a' }}>Mastered</p>
+                <p className="text-xs font-medium" style={{ color: '#5cb88a' }}>{t.mastered}</p>
                 <div className="flex flex-wrap gap-1.5">
                   {masteredSkills.map((skill) => (
                     <span key={skill} className="text-[11px] font-medium px-2.5 py-0.5 rounded-md" style={{
@@ -557,7 +554,7 @@ export default function Dashboard({
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-[11px] font-medium uppercase tracking-wider mb-1" style={{ color: '#7a8394' }}>Skill patterns</p>
-                <p className="text-sm" style={{ color: '#7a8394' }}>Unlock to see which skills need work</p>
+                <p className="text-sm" style={{ color: '#7a8394' }}>{t.unlockSkills}</p>
               </div>
               <span style={{ color: 'var(--text-tertiary)' }}>🔒</span>
             </div>
@@ -587,7 +584,7 @@ export default function Dashboard({
                       style={{ background: `${scoreColor(attempt.readiness_score)}15`, color: scoreColor(attempt.readiness_score) }}>
                       {attempt.readiness_score}
                     </div>
-                    <p className="text-sm" style={{ color: '#9aa3b0' }}>{attempt.correct_count}/{attempt.total_count} correct</p>
+                    <p className="text-sm" style={{ color: '#9aa3b0' }}>{attempt.correct_count}/{attempt.total_count} {t.correct}</p>
                   </div>
                   <p className="text-xs" style={{ color: 'var(--text-tertiary)' }}>{formatDate(attempt.created_at)}</p>
                 </div>
@@ -601,11 +598,11 @@ export default function Dashboard({
             background: 'rgba(255,255,255,0.02)',
             boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.04)',
           }}>
-            <p className="text-sm" style={{ color: '#7a8394' }}>Takes about 2 minutes · no signup needed</p>
+            <p className="text-sm" style={{ color: '#7a8394' }}>{t.twoMinutes}</p>
             <Link href="/quiz/random"
               className="text-sm font-semibold px-4 py-2 rounded-xl transition-opacity hover:opacity-80 shrink-0 ml-4"
               style={{ background: 'var(--accent)', color: 'white' }}>
-              Start now →
+              {t.startNow}
             </Link>
           </div>
         )}

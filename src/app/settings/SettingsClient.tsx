@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
-import { LANGUAGES, getLang, setLang, type LangCode } from '@/lib/i18n'
+import { LANGUAGES, getLang, setLang, getTranslations, type LangCode } from '@/lib/i18n'
 
 interface Props {
   email: string
@@ -16,14 +16,18 @@ export default function SettingsClient({ email, userPlan }: Props) {
   const [lang, setLangState] = useState<LangCode>('en')
   const [cancelling, setCancelling] = useState(false)
   const [deleting, setDeleting] = useState(false)
+  const [t, setT] = useState(() => getTranslations('en'))
 
   useEffect(() => {
-    setLangState(getLang())
+    const l = getLang()
+    setLangState(l)
+    setT(getTranslations(l))
   }, [])
 
   function handleLangChange(code: LangCode) {
     setLangState(code)
     setLang(code)
+    setT(getTranslations(code))
   }
 
   async function handleSignOut() {
@@ -33,20 +37,20 @@ export default function SettingsClient({ email, userPlan }: Props) {
   }
 
   async function handleCancel() {
-    if (!confirm('Are you sure you want to cancel? You\'ll keep access until the end of your billing period.')) return
+    if (!confirm(t.cancelConfirm)) return
     setCancelling(true)
     const res = await fetch('/api/stripe/cancel', { method: 'POST' })
     const { error } = await res.json()
     setCancelling(false)
     if (error) { alert(error); return }
-    alert('Subscription cancelled. You\'ll keep access until the end of your billing period.')
+    alert(t.cancelSuccess)
     router.refresh()
   }
 
   async function handleDelete() {
-    const confirmed = confirm('Are you sure you want to delete your account? This cannot be undone.')
+    const confirmed = confirm(t.deleteConfirm1)
     if (!confirmed) return
-    const confirmed2 = confirm('All your data, exams and progress will be permanently deleted. Continue?')
+    const confirmed2 = confirm(t.deleteConfirm2)
     if (!confirmed2) return
     setDeleting(true)
     const res = await fetch('/api/user/delete', { method: 'DELETE' })
@@ -67,13 +71,13 @@ export default function SettingsClient({ email, userPlan }: Props) {
         {/* Header */}
         <div className="flex items-center gap-3">
           <Link href="/" className="text-sm transition-colors" style={{ color: 'var(--text-tertiary)' }}>←</Link>
-          <h1 className="text-xl font-semibold">Settings</h1>
+          <h1 className="text-xl font-semibold">{t.settings}</h1>
         </div>
 
         {/* Account info */}
         <div className="rounded-2xl overflow-hidden" style={{ background: 'var(--bg-card)', boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.05)' }}>
           <div className="px-5 py-4 border-b" style={{ borderColor: 'rgba(255,255,255,0.05)' }}>
-            <p className="text-[11px] font-medium uppercase tracking-wider" style={{ color: '#7a8394' }}>Account</p>
+            <p className="text-[11px] font-medium uppercase tracking-wider" style={{ color: '#7a8394' }}>{t.account}</p>
           </div>
           <div className="px-5 py-4 flex items-center justify-between">
             <div>
@@ -92,7 +96,7 @@ export default function SettingsClient({ email, userPlan }: Props) {
         {/* Language */}
         <div className="rounded-2xl overflow-hidden" style={{ background: 'var(--bg-card)', boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.05)' }}>
           <div className="px-5 py-4 border-b" style={{ borderColor: 'rgba(255,255,255,0.05)' }}>
-            <p className="text-[11px] font-medium uppercase tracking-wider" style={{ color: '#7a8394' }}>Language</p>
+            <p className="text-[11px] font-medium uppercase tracking-wider" style={{ color: '#7a8394' }}>{t.language}</p>
           </div>
           <div className="p-3 grid grid-cols-2 gap-2 sm:grid-cols-3">
             {LANGUAGES.map((l) => (
@@ -117,7 +121,7 @@ export default function SettingsClient({ email, userPlan }: Props) {
         {userPlan === 'study_plan' && (
           <div className="rounded-2xl overflow-hidden" style={{ background: 'var(--bg-card)', boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.05)' }}>
             <div className="px-5 py-4 border-b" style={{ borderColor: 'rgba(255,255,255,0.05)' }}>
-              <p className="text-[11px] font-medium uppercase tracking-wider" style={{ color: '#7a8394' }}>Subscription</p>
+              <p className="text-[11px] font-medium uppercase tracking-wider" style={{ color: '#7a8394' }}>{t.subscription}</p>
             </div>
             <div className="px-5 py-4 flex items-center justify-between">
               <div>
@@ -132,7 +136,7 @@ export default function SettingsClient({ email, userPlan }: Props) {
                 className="text-sm font-medium transition-opacity hover:opacity-70 disabled:opacity-40"
                 style={{ color: '#c45c5c' }}
               >
-                {cancelling ? 'Cancelling...' : 'Cancel subscription'}
+                {cancelling ? '...' : t.cancelSubscription}
               </button>
             </div>
           </div>
@@ -166,7 +170,7 @@ export default function SettingsClient({ email, userPlan }: Props) {
               onClick={handleSignOut}
               className="w-full flex items-center justify-between px-5 py-3.5 hover:bg-white/5 transition-colors"
             >
-              <span className="text-sm font-medium" style={{ color: 'var(--text-secondary)' }}>Sign out</span>
+              <span className="text-sm font-medium" style={{ color: 'var(--text-secondary)' }}>{t.signOut}</span>
               <span style={{ color: 'var(--text-tertiary)' }}>›</span>
             </button>
             <button
@@ -175,7 +179,7 @@ export default function SettingsClient({ email, userPlan }: Props) {
               className="w-full flex items-center justify-between px-5 py-3.5 hover:bg-white/5 transition-colors disabled:opacity-40"
             >
               <span className="text-sm font-medium" style={{ color: '#c45c5c' }}>
-                {deleting ? 'Deleting...' : 'Delete account'}
+                {deleting ? '...' : t.deleteAccount}
               </span>
               <span style={{ color: '#c45c5c', opacity: 0.5 }}>›</span>
             </button>

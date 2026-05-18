@@ -2,9 +2,11 @@ import { createClient } from '@/lib/supabase/server'
 import { createClient as createServiceClient } from '@supabase/supabase-js'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
+import { cookies } from 'next/headers'
 import Dashboard from './Dashboard'
 import MathBackground from './MathBackground'
 import { getActivePlan } from '@/lib/plans'
+import { getLangFromCookie, type LangCode } from '@/lib/i18n'
 
 const supabase = createServiceClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -48,6 +50,8 @@ function daysUntil(dateStr: string | null): number | null {
 export default async function Home() {
   const userClient = await createClient()
   const { data: { user } } = await userClient.auth.getUser()
+  const cookieStore = await cookies()
+  const lang = getLangFromCookie(cookieStore.get('studyready_lang')?.value ?? null) as LangCode
 
   if (!user) {
     return (
@@ -208,6 +212,7 @@ export default async function Home() {
 
   return (
     <Dashboard
+      lang={lang}
       name={name}
       greeting=""
       date=""
