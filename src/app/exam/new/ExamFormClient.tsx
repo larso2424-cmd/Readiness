@@ -78,7 +78,7 @@ export default function ExamFormClient({ userId, pro = false, hasExistingExam = 
       body: JSON.stringify({ exam_id: exam.id }),
     })
 
-    router.push('/quiz')
+    router.push('/')
     router.refresh()
   }
 
