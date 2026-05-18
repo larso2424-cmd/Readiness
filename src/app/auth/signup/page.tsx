@@ -8,7 +8,7 @@ import Link from 'next/link'
 function SignupForm() {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const from = searchParams.get('from') ?? '/quiz'
+  const from = searchParams.get('from') ?? '/'
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
