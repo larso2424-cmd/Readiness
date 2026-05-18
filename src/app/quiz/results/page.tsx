@@ -1,8 +1,10 @@
 import { createClient as createServiceClient } from '@supabase/supabase-js'
 import { createClient } from '@/lib/supabase/server'
+import { cookies } from 'next/headers'
 import Link from 'next/link'
 import WrongQuestions from './WrongQuestions'
 import { getActivePlan } from '@/lib/plans'
+import { getLangFromCookie, getTranslations } from '@/lib/i18n'
 
 const supabase = createServiceClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -11,13 +13,6 @@ const supabase = createServiceClient(
 
 export const dynamic = 'force-dynamic'
 
-function scoreLabel(score: number): string {
-  if (score >= 90) return 'Mastered'
-  if (score >= 70) return 'Solid'
-  if (score >= 50) return 'Getting there'
-  if (score >= 30) return 'Needs work'
-  return 'Struggling'
-}
 
 function scoreColor(score: number): string {
   if (score >= 70) return '#5cb88a'
@@ -49,6 +44,18 @@ export default async function ResultsPage({
     attempt?: string
   }>
 }) {
+  const cookieStore = await cookies()
+  const lang = getLangFromCookie(cookieStore.get('studyready_lang')?.value ?? null)
+  const t = getTranslations(lang)
+
+  function scoreLabel(score: number): string {
+    if (score >= 90) return t.scoreMastered
+    if (score >= 70) return t.scoreSolid
+    if (score >= 50) return t.scoreGettingThere
+    if (score >= 30) return t.scoreNeedsWork
+    return t.scoreStruggling
+  }
+
   const params = await searchParams
   const score = parseInt(params.score ?? '0', 10)
   const correct = parseInt(params.correct ?? '0', 10)
@@ -195,11 +202,11 @@ export default async function ResultsPage({
           background: 'var(--bg-card)',
           boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.06)',
         }}>
-          <p className="text-xs uppercase tracking-widest font-medium" style={{ color: 'var(--text-tertiary)' }}>Readiness score</p>
+          <p className="text-xs uppercase tracking-widest font-medium" style={{ color: 'var(--text-tertiary)' }}>{t.readinessScore}</p>
           <p className="text-7xl font-bold" style={{ color }}>{score}%</p>
           <p className="text-lg font-semibold" style={{ color }}>{label}</p>
           <div className="flex items-center justify-center gap-4 text-sm pt-1" style={{ color: 'var(--text-secondary)' }}>
-            <span>{correct} of {total} correct</span>
+            <span>{correct} {t.resultOf} {total} {t.resultCorrect}</span>
             {timeTaken > 0 && <><span>·</span><span>{formatTime(timeTaken)}</span></>}
           </div>
         </div>
@@ -210,9 +217,9 @@ export default async function ResultsPage({
             background: 'rgba(224,122,95,0.08)',
             boxShadow: 'inset 0 0 0 1px rgba(224,122,95,0.2)',
           }}>
-            <p className="text-sm font-semibold" style={{ color: 'var(--accent)' }}>Blind spot detected</p>
+            <p className="text-sm font-semibold" style={{ color: 'var(--accent)' }}>{t.blindSpotTitle}</p>
             <p className="text-xs leading-relaxed" style={{ color: '#c4956a' }}>
-              You were <span className="font-medium">highly confident</span> on {confidentlyWrong.length} question{confidentlyWrong.length > 1 ? 's' : ''} you got wrong. That's a red flag — you think you understand this material but there's a gap. Focus here first.
+              {t.blindSpotDesc1} <span className="font-medium">{t.blindSpotHighlyConfident}</span> {t.blindSpotDesc2} {confidentlyWrong.length} {confidentlyWrong.length > 1 ? t.blindSpotDesc3p : t.blindSpotDesc3} {t.blindSpotDesc4}
             </p>
           </div>
         )}
@@ -225,8 +232,8 @@ export default async function ResultsPage({
               boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.06)',
             }}>
               <div>
-                <p className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>Specific gaps found</p>
-                <p className="text-xs mt-0.5" style={{ color: 'var(--text-secondary)' }}>These are the exact skills you missed — not just the topic.</p>
+                <p className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>{t.specificGapsTitle}</p>
+                <p className="text-xs mt-0.5" style={{ color: 'var(--text-secondary)' }}>{t.specificGapsDesc}</p>
               </div>
               <div className="space-y-3">
                 {weakSkills.map(([skill, stats]) => {
@@ -235,7 +242,7 @@ export default async function ResultsPage({
                     <div key={skill} className="space-y-1">
                       <div className="flex justify-between text-sm">
                         <span className="font-medium" style={{ color: 'var(--text-primary)' }}>{formatSkillTag(skill)}</span>
-                        <span className="tabular-nums" style={{ color: 'var(--text-secondary)' }}>{stats.correct}/{stats.total} correct</span>
+                        <span className="tabular-nums" style={{ color: 'var(--text-secondary)' }}>{stats.correct}/{stats.total} {t.resultCorrect}</span>
                       </div>
                       <div className="h-1.5 rounded-full overflow-hidden" style={{ background: 'rgba(255,255,255,0.06)' }}>
                         <div className="h-full rounded-full" style={{
@@ -257,8 +264,8 @@ export default async function ResultsPage({
               {/* Blurred fake content */}
               <div className="p-5 space-y-4 select-none" style={{ filter: 'blur(4px)', pointerEvents: 'none' }}>
                 <div>
-                  <p className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>Specific gaps found</p>
-                  <p className="text-xs mt-0.5" style={{ color: 'var(--text-secondary)' }}>These are the exact skills you missed — not just the topic.</p>
+                  <p className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>{t.specificGapsTitle}</p>
+                  <p className="text-xs mt-0.5" style={{ color: 'var(--text-secondary)' }}>{t.specificGapsDesc}</p>
                 </div>
                 <div className="space-y-3">
                   {fakeGaps.map((skill) => (
@@ -279,13 +286,13 @@ export default async function ResultsPage({
                 background: 'rgba(11,15,26,0.6)',
                 backdropFilter: 'blur(2px)',
               }}>
-                <p className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>See your exact skill gaps</p>
-                <p className="text-xs mt-1 mb-4" style={{ color: 'var(--text-secondary)' }}>Know precisely what to fix, not just which topic.</p>
+                <p className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>{t.seeExactSkillGaps}</p>
+                <p className="text-xs mt-1 mb-4" style={{ color: 'var(--text-secondary)' }}>{t.seeExactSkillGapsDesc}</p>
                 <Link href="/upgrade" className="text-sm font-bold px-5 py-2.5 rounded-xl transition-opacity hover:opacity-90" style={{
                   background: 'var(--accent)',
                   color: '#fff',
                 }}>
-                  Unlock Exam Mode — €19.99
+                  {t.unlockExamMode}
                 </Link>
               </div>
             </div>
@@ -298,9 +305,9 @@ export default async function ResultsPage({
             background: 'rgba(59,130,246,0.08)',
             boxShadow: 'inset 0 0 0 1px rgba(59,130,246,0.2)',
           }}>
-            <p className="text-sm font-semibold" style={{ color: '#60a5fa' }}>Hidden strength</p>
+            <p className="text-sm font-semibold" style={{ color: '#60a5fa' }}>{t.hiddenStrengthTitle}</p>
             <p className="text-xs leading-relaxed" style={{ color: '#7cb3f5' }}>
-              You got {uncertainlyRight.length} question{uncertainlyRight.length > 1 ? 's' : ''} right while feeling uncertain. Trust your instincts more — the knowledge is there.
+              {t.hiddenStrengthDesc1} {uncertainlyRight.length} {uncertainlyRight.length > 1 ? t.hiddenStrengthDesc2p : t.hiddenStrengthDesc2} {t.hiddenStrengthDesc3}
             </p>
           </div>
         )}
@@ -311,9 +318,9 @@ export default async function ResultsPage({
             background: 'var(--bg-card)',
             boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.06)',
           }}>
-            <p className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>Speed to work on</p>
+            <p className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>{t.speedTitle}</p>
             <p className="text-xs leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
-              {slowQuestions.length} question{slowQuestions.length > 1 ? 's took' : ' took'} more than twice the expected time. In the real exam that costs marks on later questions.
+              {slowQuestions.length} {slowQuestions.length > 1 ? t.speedDesc1p : t.speedDesc1} {t.speedDesc2}
             </p>
           </div>
         )}
@@ -325,7 +332,7 @@ export default async function ResultsPage({
               background: 'var(--bg-card)',
               boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.06)',
             }}>
-              <p className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>Study these next</p>
+              <p className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>{t.studyTheseNext}</p>
               <ul className="space-y-2">
                 {weakSubtopics.map((s: any) => (
                   <li key={s.id} className="flex items-start gap-2 text-sm">
@@ -344,7 +351,7 @@ export default async function ResultsPage({
               boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.06)',
             }}>
               <div className="p-5 space-y-3 select-none" style={{ filter: 'blur(4px)', pointerEvents: 'none' }}>
-                <p className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>Study these next</p>
+                <p className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>{t.studyTheseNext}</p>
                 <ul className="space-y-2">
                   {fakeStudyNext.map((s) => (
                     <li key={s} className="flex items-start gap-2 text-sm">
@@ -358,13 +365,13 @@ export default async function ResultsPage({
                 background: 'rgba(11,15,26,0.6)',
                 backdropFilter: 'blur(2px)',
               }}>
-                <p className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>Get your personalised study plan</p>
-                <p className="text-xs mt-1 mb-4" style={{ color: 'var(--text-secondary)' }}>Know exactly what to study next after every quiz.</p>
+                <p className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>{t.personalizedStudyPlan}</p>
+                <p className="text-xs mt-1 mb-4" style={{ color: 'var(--text-secondary)' }}>{t.personalizedStudyPlanDesc}</p>
                 <Link href="/upgrade" className="text-sm font-bold px-5 py-2.5 rounded-xl transition-opacity hover:opacity-90" style={{
                   background: 'var(--accent)',
                   color: '#fff',
                 }}>
-                  Unlock Exam Mode — €19.99
+                  {t.unlockExamMode}
                 </Link>
               </div>
             </div>
@@ -377,8 +384,8 @@ export default async function ResultsPage({
             background: 'rgba(92,184,138,0.08)',
             boxShadow: 'inset 0 0 0 1px rgba(92,184,138,0.2)',
           }}>
-            <p className="font-medium" style={{ color: '#5cb88a' }}>Strong across all topics</p>
-            <p className="text-sm mt-1" style={{ color: '#4a9970' }}>Try adding more subtopics to your next quiz.</p>
+            <p className="font-medium" style={{ color: '#5cb88a' }}>{t.allStrongTitle}</p>
+            <p className="text-sm mt-1" style={{ color: '#4a9970' }}>{t.allStrongDesc}</p>
           </div>
         )}
 
@@ -394,7 +401,7 @@ export default async function ResultsPage({
               background: 'var(--bg-card)',
               boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.06)',
             }}>
-              <p className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>Recommended next session</p>
+              <p className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>{t.recommendedNextTitle}</p>
               <p className="text-xs leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
                 {weakSkills.length > 0
                   ? `Your biggest gap is "${formatSkillTag(weakSkills[0][0])}". Focus on this subtopic next to close it.`
@@ -406,7 +413,7 @@ export default async function ResultsPage({
                 className="block w-full text-center py-2.5 rounded-xl font-semibold text-sm transition-opacity hover:opacity-90"
                 style={{ background: 'var(--text-primary)', color: 'var(--bg)' }}
               >
-                Start focused session →
+                {t.startFocusedSession}
               </Link>
             </div>
           ) : (
@@ -415,23 +422,23 @@ export default async function ResultsPage({
               boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.06)',
             }}>
               <div className="p-5 space-y-3 select-none" style={{ filter: 'blur(4px)', pointerEvents: 'none' }}>
-                <p className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>Recommended next session</p>
+                <p className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>{t.recommendedNextTitle}</p>
                 <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>Your biggest gap is "Exponential Equation". Focus on this subtopic next to close it.</p>
                 <div className="w-full py-2.5 rounded-xl text-center text-sm font-semibold" style={{ background: 'var(--text-primary)', color: 'var(--bg)' }}>
-                  Start focused session →
+                  {t.startFocusedSession}
                 </div>
               </div>
               <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-6" style={{
                 background: 'rgba(11,15,26,0.6)',
                 backdropFilter: 'blur(2px)',
               }}>
-                <p className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>Unlock your next session</p>
-                <p className="text-xs mt-1 mb-4" style={{ color: 'var(--text-secondary)' }}>Get a focused drill targeting your exact weak spot.</p>
+                <p className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>{t.unlockNextSession}</p>
+                <p className="text-xs mt-1 mb-4" style={{ color: 'var(--text-secondary)' }}>{t.unlockNextSessionDesc}</p>
                 <Link href="/upgrade" className="text-sm font-bold px-5 py-2.5 rounded-xl transition-opacity hover:opacity-90" style={{
                   background: 'var(--accent)',
                   color: '#fff',
                 }}>
-                  Unlock Exam Mode — €19.99
+                  {t.unlockExamMode}
                 </Link>
               </div>
             </div>
@@ -445,14 +452,14 @@ export default async function ResultsPage({
             color: 'var(--text-secondary)',
             boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.07)',
           }}>
-            New quiz
+            {t.newQuizBtn}
           </Link>
           <Link href="/" className="flex-1 text-center py-3 rounded-xl font-medium text-sm transition-colors" style={{
             background: 'var(--bg-card)',
             color: 'var(--text-secondary)',
             boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.07)',
           }}>
-            Dashboard
+            {t.dashboard}
           </Link>
         </div>
 

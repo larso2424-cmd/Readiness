@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import katex from 'katex'
 import 'katex/dist/katex.min.css'
+import { getTranslations, type LangCode } from '@/lib/i18n'
 
 interface Question {
   id: string
@@ -59,14 +60,17 @@ export default function QuizClient({
   userId,
   timeLimit,
   mockMode,
+  lang,
 }: {
   questions: Question[]
   subtopicIds: string[]
   userId: string
   timeLimit?: number
   mockMode?: boolean
+  lang?: LangCode
 }) {
   const router = useRouter()
+  const t = getTranslations(lang ?? 'en')
   const [current, setCurrent] = useState(0)
   const [answers, setAnswers] = useState<(string | null)[]>(Array(questions.length).fill(null))
   const [confidences, setConfidences] = useState<(Confidence | null)[]>(Array(questions.length).fill(null))
@@ -209,11 +213,11 @@ export default function QuizClient({
         {/* Progress */}
         <div className="space-y-2">
           <div className="flex items-center justify-between text-xs" style={{ color: 'var(--text-tertiary)' }}>
-            <span>{mockMode ? 'Mock Exam' : `${q.subtopic}`}</span>
+            <span>{mockMode ? t.mockExamLabel : `${q.subtopic}`}</span>
             <div className="flex items-center gap-3">
               {timeLimit ? (
                 <span className={`tabular-nums font-semibold ${timeWarning ? 'text-[#c45c5c]' : ''}`}>
-                  {formatTime(timeLimit - elapsed)} left
+                  {formatTime(timeLimit - elapsed)} {t.timeLeft}
                 </span>
               ) : (
                 <span className="tabular-nums">{formatTime(elapsed)}</span>
@@ -252,7 +256,7 @@ export default function QuizClient({
           {/* Confidence */}
           {answer !== null && !isRevealed && (
             <div className="space-y-2 pt-1">
-              <p className="text-sm font-medium" style={{ color: 'var(--text-secondary)' }}>How confident are you?</p>
+              <p className="text-sm font-medium" style={{ color: 'var(--text-secondary)' }}>{t.confidenceQuestion}</p>
               <div className="flex gap-2">
                 {(['low', 'medium', 'high'] as Confidence[]).map((level) => (
                   <button
@@ -266,7 +270,7 @@ export default function QuizClient({
                       : { border: '1px solid rgba(92,184,138,0.3)', color: '#5cb88a' }
                     }
                   >
-                    {level.charAt(0).toUpperCase() + level.slice(1)}
+                    {level === 'low' ? t.confidenceLow : level === 'medium' ? t.confidenceMedium : t.confidenceHigh}
                   </button>
                 ))}
               </div>
@@ -277,14 +281,14 @@ export default function QuizClient({
           {isRevealed && (
             <div className="space-y-2 pt-1">
               <p className="text-sm font-semibold" style={{ color: answer === q.correct_answer ? '#5cb88a' : '#c45c5c' }}>
-                {answer === q.correct_answer ? '✓ Correct!' : `✗ Incorrect — answer is ${q.correct_answer}`}
+                {answer === q.correct_answer ? t.correctAnswer : `${t.incorrectAnswer} ${q.correct_answer}`}
               </p>
               <button
                 onClick={() => setShowExplanation(!showExplanation)}
                 className="text-xs font-medium transition-opacity hover:opacity-70"
                 style={{ color: 'var(--accent)' }}
               >
-                {showExplanation ? 'Hide explanation' : 'Show explanation'}
+                {showExplanation ? t.hideExplanation : t.showExplanation}
               </button>
               {showExplanation && (
                 <div className="p-4 rounded-xl text-sm leading-relaxed" style={{ background: 'rgba(255,255,255,0.04)', color: 'var(--text-secondary)' }}>
@@ -304,7 +308,7 @@ export default function QuizClient({
                 className="w-full py-3.5 rounded-xl font-semibold text-sm transition-opacity hover:opacity-90"
                 style={{ background: 'var(--text-primary)', color: 'var(--bg)' }}
               >
-                Next question
+                {t.nextQuestion}
               </button>
             ) : (
               <button
@@ -313,7 +317,7 @@ export default function QuizClient({
                 className="w-full py-3.5 rounded-xl font-semibold text-sm transition-opacity disabled:opacity-40"
                 style={{ background: '#5cb88a', color: '#fff' }}
               >
-                {submitting ? 'Saving...' : 'See results'}
+                {submitting ? t.saving : t.seeResults}
               </button>
             )}
           </div>

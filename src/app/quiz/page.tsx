@@ -1,7 +1,9 @@
 import { createClient as createServiceClient } from '@supabase/supabase-js'
 import { createClient } from '@/lib/supabase/server'
+import { cookies } from 'next/headers'
 import TopicSelector from './TopicSelector'
 import { isPro, FREE_TOPICS, getActivePlan } from '@/lib/plans'
+import { getLangFromCookie } from '@/lib/i18n'
 
 const supabase = createServiceClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -11,6 +13,9 @@ const supabase = createServiceClient(
 export const dynamic = 'force-dynamic'
 
 export default async function QuizPage() {
+  const cookieStore = await cookies()
+  const lang = getLangFromCookie(cookieStore.get('studyready_lang')?.value ?? null)
+
   const userClient = await createClient()
   const { data: { user } } = await userClient.auth.getUser()
 
@@ -97,6 +102,7 @@ export default async function QuizPage() {
       userPlan={userPlan}
       quizzesToday={quizzesToday}
       freeTopics={FREE_TOPICS}
+      lang={lang}
     />
   )
 }

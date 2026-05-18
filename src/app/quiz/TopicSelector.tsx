@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import { getTranslations, type LangCode } from '@/lib/i18n'
 
 interface Subtopic {
   id: string
@@ -18,6 +19,7 @@ export default function TopicSelector({
   userPlan = 'free',
   quizzesToday = 0,
   freeTopics = [],
+  lang,
 }: {
   subtopics: Subtopic[]
   allSubtopics: Subtopic[]
@@ -26,8 +28,10 @@ export default function TopicSelector({
   userPlan?: string
   quizzesToday?: number
   freeTopics?: string[]
+  lang?: LangCode
 }) {
   const router = useRouter()
+  const t = getTranslations(lang ?? 'en')
   const [selected, setSelected] = useState<Set<string>>(new Set())
   const [showAll, setShowAll] = useState(false)
 
@@ -73,7 +77,7 @@ export default function TopicSelector({
   if (allSubtopics.length === 0) {
     return (
       <div className="min-h-screen flex items-center justify-center px-4" style={{ background: 'var(--bg)' }}>
-        <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>No questions available yet.</p>
+        <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>{t.noQuestionsAvailable}</p>
       </div>
     )
   }
@@ -89,8 +93,8 @@ export default function TopicSelector({
           </Link>
           <div className="flex items-start justify-between">
             <div>
-              <h1 className="text-xl font-bold" style={{ color: 'var(--text-primary)' }}>Practice quiz</h1>
-              <p className="text-sm mt-0.5" style={{ color: 'var(--text-secondary)' }}>Choose topics to be tested on.</p>
+              <h1 className="text-xl font-bold" style={{ color: 'var(--text-primary)' }}>{t.practiceQuiz}</h1>
+              <p className="text-sm mt-0.5" style={{ color: 'var(--text-secondary)' }}>{t.chooseTopicsDesc}</p>
             </div>
             {!pro && (
               <Link href="/upgrade" className="shrink-0 ml-4 text-xs font-semibold px-3 py-1.5 rounded-lg transition-colors" style={{
@@ -110,13 +114,13 @@ export default function TopicSelector({
             background: 'var(--bg-card)',
             border: '1px solid rgba(224,122,95,0.3)',
           }}>
-            <p className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>Daily quiz used</p>
-            <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>Free users get 1 quiz per day. Upgrade for unlimited.</p>
+            <p className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>{t.dailyQuizUsed}</p>
+            <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>{t.dailyQuizUsedDesc}</p>
             <Link href="/upgrade" className="block w-full text-center py-2.5 rounded-xl text-sm font-bold transition-opacity" style={{
               background: 'var(--accent)',
               color: '#fff',
             }}>
-              Get Exam Mode — €19.99
+              {t.getExamMode}
             </Link>
           </div>
         )}
@@ -129,10 +133,10 @@ export default function TopicSelector({
           }}>
             <div>
               <p className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>
-                {showAll ? 'All topics' : 'Your exam topics'}
+                {showAll ? t.allTopics : t.yourExamTopics}
               </p>
               <p className="text-xs mt-0.5" style={{ color: 'var(--text-secondary)' }}>
-                {showAll ? 'Showing everything' : `${subtopics.length} subtopics`}
+                {showAll ? t.showingEverything : `${subtopics.length} ${t.subtopics}`}
               </p>
             </div>
             <button
@@ -140,7 +144,7 @@ export default function TopicSelector({
               className="text-xs transition-colors shrink-0 ml-4"
               style={{ color: 'var(--accent)' }}
             >
-              {showAll ? 'Show exam only' : 'Show all'}
+              {showAll ? t.showExamOnly : t.showAll}
             </button>
           </div>
         )}
@@ -164,7 +168,7 @@ export default function TopicSelector({
                     className="text-xs transition-colors"
                     style={{ color: 'var(--text-tertiary)' }}
                   >
-                    {subs.filter(s => !isLocked(s)).every((s) => selected.has(s.id)) ? 'Deselect all' : 'Select all'}
+                    {subs.filter(s => !isLocked(s)).every((s) => selected.has(s.id)) ? t.deselectAll : t.selectAll}
                   </button>
                 )}
               </div>
@@ -233,7 +237,7 @@ export default function TopicSelector({
             className="w-full py-3.5 rounded-xl font-semibold text-sm transition-opacity disabled:opacity-30 disabled:cursor-not-allowed"
             style={{ background: 'var(--text-primary)', color: 'var(--bg)' }}
           >
-            Start quiz · {selected.size} {selected.size === 1 ? 'topic' : 'topics'} selected
+            {t.startQuizBtn} {selected.size} {selected.size === 1 ? t.topicSelected : t.topicsSelected}
           </button>
           {selected.size === 0 && !quizLimitReached && (
             <button
@@ -241,7 +245,7 @@ export default function TopicSelector({
               className="w-full py-2 text-sm transition-colors"
               style={{ color: 'var(--text-tertiary)' }}
             >
-              Select all {displaySubtopics.filter(s => !isLocked(s)).length} topics
+              {t.selectAllTopics} {displaySubtopics.filter(s => !isLocked(s)).length} {t.topics}
             </button>
           )}
         </div>

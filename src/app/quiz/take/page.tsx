@@ -1,9 +1,11 @@
 import { createClient as createServiceClient } from '@supabase/supabase-js'
 import { createClient } from '@/lib/supabase/server'
+import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import QuizClient from './QuizClient'
 import { getActivePlan, FREE_TOPICS } from '@/lib/plans'
+import { getLangFromCookie, getTranslations } from '@/lib/i18n'
 
 const supabase = createServiceClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -19,6 +21,9 @@ export default async function TakePage({
 }) {
   const params = await searchParams
   const subtopicIds = (params.subtopics ?? '').split(',').filter(Boolean)
+  const cookieStore = await cookies()
+  const lang = getLangFromCookie(cookieStore.get('studyready_lang')?.value ?? null)
+  const t = getTranslations(lang)
 
   if (subtopicIds.length === 0) redirect('/quiz')
 
@@ -72,9 +77,9 @@ export default async function TakePage({
               🔒
             </div>
             <div className="space-y-1">
-              <h2 className="text-white font-semibold text-lg">Quiz limit reached</h2>
+              <h2 className="text-white font-semibold text-lg">{t.quizLimitReached}</h2>
               <p className="text-gray-400 text-sm leading-relaxed">
-                One quiz per day keeps the learning consistent. Your next quiz unlocks in{' '}
+                {t.quizLimitDesc}{' '}
                 <span className="text-white font-medium">{hoursLeft}h</span>.
               </p>
             </div>
@@ -83,18 +88,18 @@ export default async function TakePage({
                 href="/"
                 className="block w-full bg-white text-gray-900 py-2.5 rounded-xl font-medium text-sm hover:bg-gray-100 transition-colors"
               >
-                Back to dashboard
+                {t.backToDashboard}
               </Link>
               <Link
                 href="/quiz"
                 className="block w-full text-gray-500 hover:text-gray-300 py-2 text-sm transition-colors"
               >
-                View topics
+                {t.viewTopics}
               </Link>
             </div>
           </div>
           <p className="text-gray-600 text-xs">
-            Spaced repetition works best with consistent daily practice.
+            {t.spacedRepetition}
           </p>
         </div>
       </div>
@@ -170,5 +175,5 @@ export default async function TakePage({
       }
     })
 
-  return <QuizClient questions={questions} subtopicIds={subtopicIds} userId={user.id} />
+  return <QuizClient questions={questions} subtopicIds={subtopicIds} userId={user.id} lang={lang} />
 }
