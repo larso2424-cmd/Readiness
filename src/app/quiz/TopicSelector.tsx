@@ -149,6 +149,34 @@ export default function TopicSelector({
           </div>
         )}
 
+        {/* Free trial banner — shown to free users at top of topic list */}
+        {!pro && (
+          <Link
+            href="/upgrade"
+            className="flex items-center gap-3 px-4 py-3.5 rounded-xl fade-up fade-up-3 transition-opacity hover:opacity-90"
+            style={{
+              background: 'linear-gradient(135deg, rgba(224,122,95,0.12) 0%, rgba(224,122,95,0.06) 100%)',
+              border: '1px solid rgba(224,122,95,0.35)',
+            }}
+          >
+            <span className="text-lg">🎁</span>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>
+                You&apos;re on the free plan
+              </p>
+              <p className="text-xs mt-0.5" style={{ color: 'var(--text-secondary)' }}>
+                Unlock all topics with a free trial — no card needed to start
+              </p>
+            </div>
+            <span className="text-xs font-bold px-2.5 py-1 rounded-lg shrink-0" style={{
+              background: 'var(--accent)',
+              color: '#fff',
+            }}>
+              Try free →
+            </span>
+          </Link>
+        )}
+
         {/* Topic groups */}
         <div className="space-y-6 fade-up fade-up-3">
           {Object.entries(grouped).map(([topic, subs]) => (
@@ -180,25 +208,27 @@ export default function TopicSelector({
                     <Link
                       key={s.id}
                       href="/upgrade"
-                      className="flex items-center gap-3 px-4 py-3 rounded-xl transition-opacity opacity-50 hover:opacity-70"
+                      className="flex items-center gap-3 px-4 py-3 rounded-xl transition-all hover:opacity-80"
                       style={{
                         background: 'var(--bg-card)',
-                        border: '1px solid var(--border-subtle)',
+                        border: '1px solid rgba(224,122,95,0.2)',
+                        opacity: 0.75,
                       }}
                     >
                       <div className="w-4 h-4 rounded shrink-0 flex items-center justify-center" style={{
-                        border: '1.5px solid var(--text-tertiary)',
+                        border: '1.5px solid rgba(224,122,95,0.5)',
                       }}>
-                        <svg className="w-2.5 h-2.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} style={{ color: 'var(--text-tertiary)' }}>
+                        <svg className="w-2.5 h-2.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} style={{ color: 'var(--accent)' }}>
                           <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
                           <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
                         </svg>
                       </div>
-                      <span className="text-sm font-medium flex-1" style={{ color: 'var(--text-tertiary)' }}>{s.subtopic}</span>
-                      <span className="text-xs font-bold px-2 py-0.5 rounded-full" style={{
-                        background: 'var(--accent-muted)',
+                      <span className="text-sm font-medium flex-1" style={{ color: 'var(--text-secondary)' }}>{s.subtopic}</span>
+                      <span className="text-xs font-semibold px-2 py-0.5 rounded-full" style={{
+                        background: 'rgba(224,122,95,0.15)',
                         color: 'var(--accent)',
-                      }}>PRO</span>
+                        border: '1px solid rgba(224,122,95,0.3)',
+                      }}>Free trial</span>
                     </Link>
                   ) : (
                     <button
